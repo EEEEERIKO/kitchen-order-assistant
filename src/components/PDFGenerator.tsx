@@ -153,30 +153,76 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProd
 
 export function generatePDF(items: ListItem[], language: 'es' | 'fr', lastAddedProductId?: string): void {
   const { html, filename } = generatePDFHTML(items, language, lastAddedProductId)
-  const iframe = document.createElement('iframe')
-  iframe.style.display = 'none'
-  document.body.appendChild(iframe)
   
-  const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
-  if (iframeDoc) {
-    iframeDoc.open()
-    iframeDoc.write(html)
-    iframeDoc.close()
-    
-    iframe.onload = () => {
-      setTimeout(() => {
-        // Guardar título original y cambiar temporalmente
-        const originalTitle = document.title
-        document.title = filename
+  // Detectar si es iOS (iPhone, iPad, iPod)
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+  
+  if (isIOS) {
+    // Para iOS: usar window.open y ocultar watermark
+    try {
+      // Reemplazar el watermark CSS para ocultarlo completamente en iOS
+      const htmlWithoutWatermark = html.replace(
+        /<div class="watermark">[\s\S]*?<\/div>/,
+        '<div class="watermark" style="display: none;"></div>'
+      )
+      
+      // Crear nueva ventana
+      const printWindow = window.open('', '_blank')
+      if (printWindow) {
+        // Escribir el HTML en la nueva ventana
+        printWindow.document.write(htmlWithoutWatermark)
+        printWindow.document.close()
         
-        iframe.contentWindow?.print()
-        
-        // Restaurar título original después
+        // Usar un timeout para asegurar que el contenido se ha renderizado
         setTimeout(() => {
-          document.title = originalTitle
-          document.body.removeChild(iframe)
-        }, 1000)
-      }, 250)
+          try {
+            const originalTitle = printWindow.document.title
+            printWindow.document.title = filename
+            
+            // Iniciar impresión
+            printWindow.print()
+            
+            // Cerrar la ventana después de iniciar la impresión
+            setTimeout(() => {
+              printWindow.document.title = originalTitle
+              printWindow.close()
+            }, 500)
+          } catch (error) {
+            console.error('Error printing on iOS:', error)
+            try { printWindow.close() } catch { }
+          }
+        }, 800)
+      }
+    } catch (error) {
+      console.error('Error generating PDF on iOS:', error)
+    }
+  } else {
+    // Para Desktop (PC): usar iframe - mantiene el diseño perfecto
+    const iframe = document.createElement('iframe')
+    iframe.style.display = 'none'
+    document.body.appendChild(iframe)
+    
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
+    if (iframeDoc) {
+      iframeDoc.open()
+      iframeDoc.write(html)
+      iframeDoc.close()
+      
+      iframe.onload = () => {
+        setTimeout(() => {
+          // Guardar título original y cambiar temporalmente
+          const originalTitle = document.title
+          document.title = filename
+          
+          iframe.contentWindow?.print()
+          
+          // Restaurar título original después
+          setTimeout(() => {
+            document.title = originalTitle
+            document.body.removeChild(iframe)
+          }, 1000)
+        }, 250)
+      }
     }
   }
 }
