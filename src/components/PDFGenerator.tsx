@@ -158,19 +158,44 @@ export function generatePDF(items: ListItem[], language: 'es' | 'fr', lastAddedP
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
   
   if (isIOS) {
-    // Para iOS: usar window.open y ocultar watermark
+    // Para iOS: usar window.open y mejorar CSS para evitar cortes
     try {
-      // Reemplazar el watermark CSS para ocultarlo completamente en iOS
-      const htmlWithoutWatermark = html.replace(
+      // Mejorar CSS para iOS: agregar protección contra cortes de items
+      let htmlForIOS = html
+      
+      // Reemplazar el watermark para ocultarlo
+      htmlForIOS = htmlForIOS.replace(
         /<div class="watermark">[\s\S]*?<\/div>/,
         '<div class="watermark" style="display: none;"></div>'
+      )
+      
+      // Agregar CSS mejorado para iOS que evite cortes de productos
+      // Insertar justo antes del cierre de </style>
+      const improvedCSS = `
+    .product-item { border: 1px solid #999; padding: 3px; display: flex; align-items: center; gap: 3px; font-size: 8px; background: white; page-break-inside: avoid; break-inside: avoid; }
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; orphans: 1; widows: 1; }
+    .content { display: flex; flex-direction: column; gap: 3px; orphans: 1; widows: 1; }`
+      
+      htmlForIOS = htmlForIOS.replace(
+        /.product-item \{ border: 1px solid #999; padding: 3px; display: flex; align-items: center; gap: 3px; font-size: 8px; background: white; \}/,
+        improvedCSS.split('\n')[1].trim()
+      )
+      
+      // O mejor, reemplazar todo el bloque de estilos relevantes de una forma más limpia
+      htmlForIOS = htmlForIOS.replace(
+        /<\/style>/,
+        `    /* iOS optimizations para evitar cortes de items */
+    .product-item { page-break-inside: avoid !important; break-inside: avoid !important; }
+    .category-section { orphans: 1; widows: 1; }
+    .products-grid { orphans: 1; widows: 1; }
+  </style>`
       )
       
       // Crear nueva ventana
       const printWindow = window.open('', '_blank')
       if (printWindow) {
-        // Escribir el HTML en la nueva ventana
-        printWindow.document.write(htmlWithoutWatermark)
+        // Escribir el HTML mejorado en la nueva ventana
+        printWindow.document.write(htmlForIOS)
         printWindow.document.close()
         
         // Usar un timeout para asegurar que el contenido se ha renderizado
@@ -197,7 +222,7 @@ export function generatePDF(items: ListItem[], language: 'es' | 'fr', lastAddedP
       console.error('Error generating PDF on iOS:', error)
     }
   } else {
-    // Para Desktop (PC): usar iframe - mantiene el diseño perfecto
+    // Para Desktop (PC): usar iframe - mantiene el diseño perfecto SIN cambios
     const iframe = document.createElement('iframe')
     iframe.style.display = 'none'
     document.body.appendChild(iframe)
