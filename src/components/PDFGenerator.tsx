@@ -1,0 +1,194 @@
+import type { ListItem } from '../app/domain/types'
+import { getGroupedAndOrderedProducts } from './grouping'
+import { getAllCategories } from '../app/domain/classification'
+
+interface PDFGeneratorProps {
+  items: ListItem[]
+  language: 'es' | 'fr'
+}
+
+function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProductId?: string): { html: string; filename: string } {
+  const groupedAndOrdered = getGroupedAndOrderedProducts(items, lastAddedProductId)
+  const allCategories = getAllCategories()
+  const categoryMap = new Map(allCategories.map((cat) => [cat.id, cat]))
+
+  const now = new Date()
+  const day = String(now.getDate()).padStart(2, '0')
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const year = now.getFullYear()
+  const hours = String(now.getHours()).padStart(2, '0')
+  const minutes = String(now.getMinutes()).padStart(2, '0')
+  const seconds = String(now.getSeconds()).padStart(2, '0')
+  
+  const dateStr = language === 'es'
+    ? now.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
+    : now.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })
+  const timeStr = `${hours}:${minutes}`
+  const dateLabel = language === 'es' ? 'Fecha:' : 'Date:'
+  const timeLabel = language === 'es' ? 'Hora:' : 'Heure:'
+  const title = language === 'es' ? 'Lista de Reposición' : 'Liste de Réapprovisionnement'
+  const cantLabel = language === 'es' ? 'Cant:' : 'Qte:'
+  const unitLabel = language === 'es' ? 'Unidad:' : 'Unité:'
+  const subtitle = 'Le Rendez-Vous'
+  const companyName = 'Le Rendez-Vous System'
+  const docId = 'ID: LRV-0026'
+  const pdfFilename = `Lista_Reposicion_${day}-${month}-${year}_${hours}-${minutes}-${seconds}`
+
+  let html = `<!DOCTYPE html>
+<html lang="${language}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${pdfFilename}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    @page { size: A4; margin: 15mm 20mm; }
+    @page :first { margin-top: 15mm; }
+    @page :last { margin-bottom: 50mm; }
+    body { font-family: 'Inter', sans-serif; font-size: 11px; line-height: 1.4; color: #000; background: white; }
+    .print-wrapper { background: white; width: 100%; }
+    header { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-end; page-break-after: avoid; }
+    header:not(:first-of-type) { display: none; }
+    @page :not(:first) header { display: none; }
+    .header-left h1 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 3px; }
+    .header-left h2 { font-size: 12px; font-weight: 400; color: #333; }
+    .header-right { display: flex; flex-direction: column; gap: 6px; }
+    .logo-circle { width: 40px; height: 40px; background: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 12px; letter-spacing: 1px; }
+    .header-info { display: flex; gap: 15px; font-size: 9px; font-family: 'Courier New', monospace; }
+    .header-info div { display: flex; flex-direction: column; gap: 1px; }
+    .header-info strong { text-transform: uppercase; font-weight: 600; font-size: 8px; }
+    .content { display: flex; flex-direction: column; gap: 3px; }
+    .category-section { break-inside: auto; page-break-inside: auto; margin-bottom: 2px; }
+    .category-section.large { break-inside: avoid; page-break-inside: avoid; }
+    .category-title { font-family: 'Playfair Display', serif; font-size: 12px; font-weight: 700; color: #999; border-bottom: 1px solid #ccc; padding-bottom: 2px; margin-bottom: 3px; }
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+    .product-item { border: 1px solid #999; padding: 3px; display: flex; align-items: center; gap: 3px; font-size: 8px; background: white; }
+    .checkbox { width: 11px; height: 11px; border: 1.5px solid #999; border-radius: 1px; flex-shrink: 0; }
+    .product-name { font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .product-fields { display: flex; align-items: center; gap: 1px; font-size: 6.5px; flex-shrink: 0; }
+    .field-label { color: #666; font-weight: 400; white-space: nowrap; }
+    .field-box { border: 1px solid #999; width: 16px; height: 9px; background: #f8f8f8; flex-shrink: 0; }
+    footer { border-top: 2px solid #000; padding-top: 6px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 8px; font-family: 'Courier New', monospace; color: #666; page-break-before: avoid; }
+    footer:not(:last-of-type) { display: none; }
+    @page :not(:last) footer { display: none; }
+    .watermark { position: fixed; bottom: 35mm; right: 30mm; font-size: 140px; color: rgba(200, 200, 200, 0.06); font-family: 'Playfair Display', serif; font-weight: 700; transform: rotate(-45deg); pointer-events: none; z-index: 0; line-height: 1; }
+    @page :not(:last) .watermark { display: none; }
+  </style>
+</head>
+<body>
+  <div class="print-wrapper">
+    <header>
+      <div class="header-left">
+        <h1>${title}</h1>
+        <h2>${subtitle}</h2>
+      </div>
+      <div class="header-right">
+        <div class="logo-circle">LR</div>
+        <div class="header-info">
+          <div>
+            <strong>${dateLabel}</strong>
+            <span>${dateStr}</span>
+          </div>
+          <div>
+            <strong>${timeLabel}</strong>
+            <span>${timeStr}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <div class="content">`
+
+  groupedAndOrdered.forEach(([categoryId, categoryItems]: any) => {
+    if (!categoryItems || categoryItems.length === 0) return
+    const category = categoryMap.get(categoryId)
+    if (!category) return
+    
+    const categoryName = language === 'es' ? category.nameEs : category.nameFr
+    const isLarge = categoryItems.length > 8
+    const largeClass = isLarge ? ' large' : ''
+
+    html += `
+      <div class="category-section${largeClass}">
+        <div class="category-title">${categoryName}</div>
+        <div class="products-grid">`
+
+    categoryItems.forEach((item: ListItem) => {
+      const productName = language === 'es' ? item.productNameEs : item.productNameFr
+      html += `
+          <div class="product-item">
+            <div class="checkbox"></div>
+            <span class="product-name">${productName}</span>
+            <div class="product-fields">
+              <span class="field-label">${cantLabel}</span>
+              <div class="field-box"></div>
+              <span class="field-label">${unitLabel}</span>
+              <div class="field-box"></div>
+            </div>
+          </div>`
+    })
+
+    html += `
+        </div>
+      </div>`
+  })
+
+  html += `
+    </div>
+    
+    <div class="watermark">✓</div>
+    
+    <footer>
+      <span>${companyName}</span>
+      <span>${docId}</span>
+      <span></span>
+    </footer>
+  </div>
+</body>
+</html>`
+
+  return { html, filename: pdfFilename }
+}
+
+export function generatePDF(items: ListItem[], language: 'es' | 'fr', lastAddedProductId?: string): void {
+  const { html, filename } = generatePDFHTML(items, language, lastAddedProductId)
+  const iframe = document.createElement('iframe')
+  iframe.style.display = 'none'
+  document.body.appendChild(iframe)
+  
+  const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
+  if (iframeDoc) {
+    iframeDoc.open()
+    iframeDoc.write(html)
+    iframeDoc.close()
+    
+    iframe.onload = () => {
+      setTimeout(() => {
+        // Guardar título original y cambiar temporalmente
+        const originalTitle = document.title
+        document.title = filename
+        
+        iframe.contentWindow?.print()
+        
+        // Restaurar título original después
+        setTimeout(() => {
+          document.title = originalTitle
+          document.body.removeChild(iframe)
+        }, 1000)
+      }, 250)
+    }
+  }
+}
+
+export function PDFGenerator({ items, language }: PDFGeneratorProps) {
+  const handleDownloadPDF = () => {
+    generatePDF(items, language)
+  }
+
+  return (
+    <button onClick={handleDownloadPDF} className="pdfGenerator__button">
+      📥 Descargar PDF
+    </button>
+  )
+}

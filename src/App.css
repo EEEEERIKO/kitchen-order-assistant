@@ -1,0 +1,412 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #fff;
+  color: #333;
+}
+
+.app {
+  max-width: 1000px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: white;
+  padding: 0 1rem;
+}
+
+.header {
+  padding: 2rem 1.5rem;
+  background: #f9f9f9;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 1rem;
+  color: #666;
+  font-weight: 400;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 80px;
+}
+
+.summary {
+  padding: 1.5rem;
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  background: #fafafa;
+  border-top: 1px solid #e0e0e0;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.summaryLabel {
+  font-size: 0.875rem;
+  color: #999;
+  font-weight: 500;
+}
+
+.summaryValue {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.clearButton {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  background: #e0e0e0;
+  color: #666;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.clearButton:hover {
+  background: #d0d0d0;
+}
+
+.clearButton:active {
+  background: #c0c0c0;
+}
+
+.clearButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Phase 5: Order validation warning */
+.orderWarning {
+  padding: 0.75rem 1rem;
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 4px;
+  color: #856404;
+  font-weight: 500;
+  font-size: 0.875rem;
+  width: 100%;
+  text-align: center;
+}
+
+/* Phase 6: Print view styles */
+.printContainer {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 1rem;
+}
+
+.printControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+
+.printBackButton,
+.printButton {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.printBackButton {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.printBackButton:hover {
+  background: #d0d0d0;
+}
+
+.printButton {
+  background: #2196f3;
+  color: white;
+}
+
+.printButton:hover {
+  background: #1976d2;
+}
+
+.printLanguageControl {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+}
+
+.printLanguageControl select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  background: white;
+  cursor: pointer;
+}
+
+.printLanguageControl select:focus {
+  outline: none;
+  border-color: #2196f3;
+  box-shadow: 0 0 4px rgba(33, 150, 243, 0.2);
+}
+
+/* Actions container for buttons */
+.actions {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.printTriggerButton {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.printTriggerButton:hover:not(:disabled) {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.printTriggerButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.clearButton {
+  padding: 0.75rem 1rem;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clearButton:hover:not(:disabled) {
+  background: #da190b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.clearButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Footer sticky */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: white;
+  border-top: 2px solid #e0e0e0;
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.footer .printTriggerButton {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: block;
+}
+
+.printTriggerButton.sticky {
+  width: 100%;
+}
+
+/* Highlight animation for new products */
+@keyframes highlightPulse {
+  0% {
+    background-color: #fffacd;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+  }
+  50% {
+    background-color: #fff8b0;
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+  }
+}
+
+.categorySection[data-highlighted="true"] {
+  animation: highlightPulse 2s ease-in-out forwards !important;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .header {
+    padding: 1.5rem 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+  }
+
+  .summary {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .clearButton {
+    width: 100%;
+  }
+
+  .printControls {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .printBackButton,
+  .printButton,
+  .printLanguageControl {
+    width: 100%;
+  }
+
+  .printLanguageControl {
+    justify-content: space-between;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .printTriggerButton,
+  .clearButton {
+    width: 100%;
+  }
+}
+
+/* Mobile-first responsive design optimizations */
+@media (max-width: 768px) {
+  /* Ensure proper touch targets on mobile (minimum 44px) */
+  button {
+    min-height: 44px;
+  }
+
+  input,
+  textarea {
+    min-height: 44px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  /* Reduce padding on mobile */
+  .container {
+    padding: 0 12px;
+  }
+
+  /* Make modals full-width on mobile */
+  .modal-content {
+    max-width: 100%;
+    margin: 12px;
+  }
+
+  /* Optimize footer button for mobile */
+  .footer-button {
+    width: 100%;
+    padding: 14px 16px;
+  }
+
+  /* Better text sizing for mobile */
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  /* Remove horizontal padding on mobile for fullwidth feel */
+  main {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* Tablet optimization */
+@media (min-width: 769px) and (max-width: 1024px) {
+  main {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* Smooth scrolling for better mobile experience */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Touch-friendly spacing */
+@supports (padding: max(0px)) {
+  main {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+
+  nav {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+}
+

@@ -1,0 +1,35 @@
+# Auto detect text files and normalize line endings to LF
+* text=auto
+
+# Git files
+.gitattributes text
+.gitignore text
+
+# Source files
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+
+# Documentation
+*.md text eol=lf
+LICENSE text eol=lf
+*.txt text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mov binary
+*.mp4 binary
+*.mp3 binary
+*.gz binary
+*.zip binary
+*.7z binary
+
+# Package files
+package-lock.json merge=union

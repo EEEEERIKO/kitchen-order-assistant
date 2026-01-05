@@ -1,0 +1,111 @@
+/* ProductForm - Minimal, functional styling */
+
+.form {
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 150px auto;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.inputGroup,
+.unitGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #333;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
+
+.input::placeholder {
+  color: #999;
+}
+
+.select {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  background: white;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #333;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
+
+.button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background: #555;
+}
+
+.button:active {
+  background: #222;
+}
+
+.button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.error {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #fee;
+  color: #c33;
+  border-left: 4px solid #c33;
+  font-size: 0.875rem;
+  border-radius: 2px;
+}
+
+/* Responsive: Stack on mobile */
+@media (max-width: 600px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .input,
+  .select,
+  .button {
+    font-size: 16px; /* Prevents iOS zoom */
+  }
+}

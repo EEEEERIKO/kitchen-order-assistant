@@ -1,0 +1,197 @@
+/* ========================================
+   PRINT VIEW - GENERADOR DE PDF OPTIMIZADO
+   ======================================== */
+
+.printView {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+  background: white;
+}
+
+/* Pantalla vacía */
+.printView--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.emptyMessage {
+  font-size: 18px;
+  color: #999;
+  margin: 0;
+}
+
+/* ========================================
+   BOTÓN DE DESCARGA PDF
+   ======================================== */
+
+.printView__screenOnly {
+  display: block;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+}
+
+.printView__printButton {
+  padding: 16px 40px;
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  background: white;
+  color: #4CAF50;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.printView__printButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.printView__printButton:active {
+  transform: translateY(0);
+}
+
+.printView__printButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   INFORMACIÓN
+   ======================================== */
+
+.printView__info {
+  background: #e8f5e9;
+  border-left: 4px solid #4CAF50;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.printView__info p {
+  margin: 10px 0;
+  color: #2e7d32;
+  font-size: 16px;
+}
+
+.printView__subtext {
+  font-size: 14px !important;
+  color: #558b2f !important;
+}
+
+/* ========================================
+   DIÁLOGO DE IDIOMA
+   ======================================== */
+
+.languageDialog__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.languageDialog__container {
+  background: white;
+  border-radius: 16px;
+  padding: 50px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 450px;
+  width: 90%;
+  text-align: center;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.languageDialog__title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.languageDialog__subtitle {
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 40px 0;
+}
+
+.languageDialog__buttons {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.languageDialog__button {
+  flex: 1;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  border: 3px solid #ddd;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.languageDialog__button:hover {
+  border-color: #4CAF50;
+  background: #f5f5f5;
+  transform: translateY(-3px);
+}
+
+.languageDialog__button--es:active {
+  background: #e8f5e9;
+  border-color: #4CAF50;
+}
+
+.languageDialog__button--fr:active {
+  background: #e3f2fd;
+  border-color: #2196F3;
+}
+
+.languageDialog__cancel {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  color: #999;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.languageDialog__cancel:hover {
+  color: #333;
+}
+
+
