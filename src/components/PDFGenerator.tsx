@@ -215,6 +215,14 @@ export function generatePDF(items: ListItem[], language: 'es' | 'fr', lastAddedP
     }
   } else {
     // Para Desktop (PC): usar iframe - mantiene el diseño perfecto SIN cambios
+    // Pero ocultamos el watermark para PC
+    let htmlForPC = html.replace(
+      /<\/style>/,
+      `    /* Hide watermark on desktop */
+    .watermark { display: none !important; }
+  </style>`
+    )
+    
     const iframe = document.createElement('iframe')
     iframe.style.display = 'none'
     document.body.appendChild(iframe)
@@ -222,7 +230,7 @@ export function generatePDF(items: ListItem[], language: 'es' | 'fr', lastAddedP
     const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
     if (iframeDoc) {
       iframeDoc.open()
-      iframeDoc.write(html)
+      iframeDoc.write(htmlForPC)
       iframeDoc.close()
       
       iframe.onload = () => {
