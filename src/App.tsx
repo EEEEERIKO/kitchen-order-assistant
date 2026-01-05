@@ -3,13 +3,16 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { ProductForm } from './components/ProductForm'
 import { CategorizedProductList } from './components/CategorizedProductList'
 import { LanguageModal } from './components/LanguageModal'
+import { LanguageSwitcher } from './components/LanguageSwitcher'
 import { generatePDF } from './components/PDFGenerator'
+import { useLanguage } from './app/i18n/LanguageProvider'
 import { useRestockingList, encodeListForSharing, decodeListFromShare } from './components/useRestockingList'
 import { classifyProduct } from './app/domain/classification'
 import { CATEGORIES } from './app/domain/dictionary'
 import type { Unit } from './app/domain/types'
 
 function App() {
+  const { t } = useLanguage()
   const [showLanguageModal, setShowLanguageModal] = useState(false)
   const [lastAddedCategory, setLastAddedCategory] = useState<string | null>(null)
   const [lastAddedProductId, setLastAddedProductId] = useState<string | null>(null)
