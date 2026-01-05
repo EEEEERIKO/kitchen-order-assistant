@@ -189,8 +189,6 @@ function App() {
 
   // Función para compartir la lista
   const handleShareList = async () => {
-    console.log('Botón compartir clickeado. Items:', items.length)
-    
     if (items.length === 0) {
       setShareMessage('La lista está vacía, agrega productos para compartir')
       setTimeout(() => setShareMessage(null), 3000)
@@ -203,8 +201,24 @@ function App() {
       // Esto funciona tanto en localhost como en producción
       const baseUrl = window.location.origin + window.location.pathname.split('?')[0]
       // CRITICAL: URL-encode the parameter so special characters are properly handled
-      const url = `${baseUrl}?list=${encodeURIComponent(encoded)}`
-      setShareUrl(url)
+      const longUrl = `${baseUrl}?list=${encodeURIComponent(encoded)}`
+      
+      // Acortar URL con TinyURL API
+      try {
+        const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`)
+        const shortUrl = await response.text()
+        
+        if (shortUrl && !shortUrl.includes('error')) {
+          setShareUrl(shortUrl)
+        } else {
+          // Si falla, usar la URL larga como fallback
+          setShareUrl(longUrl)
+        }
+      } catch {
+        // Si falla la API de acortamiento, usar URL larga
+        setShareUrl(longUrl)
+      }
+      
       setShowShareModal(true)
     } catch (error) {
       setShareMessage('Error al generar el enlace')
@@ -216,7 +230,7 @@ function App() {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl)
-      setShareMessage('¡Enlace copiado al portapapeles!')
+      setShareMessage('¡Enlace acortado copiado!')
       setTimeout(() => setShareMessage(null), 2000)
     } catch (err) {
       setShareMessage('Error al copiar el enlace')
