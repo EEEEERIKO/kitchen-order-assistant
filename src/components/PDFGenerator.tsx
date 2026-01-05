@@ -169,25 +169,17 @@ export function generatePDF(items: ListItem[], language: 'es' | 'fr', lastAddedP
         '<div class="watermark" style="display: none;"></div>'
       )
       
-      // Agregar CSS mejorado para iOS que evite cortes de productos
-      // Insertar justo antes del cierre de </style>
-      const improvedCSS = `
-    .product-item { border: 1px solid #999; padding: 3px; display: flex; align-items: center; gap: 3px; font-size: 8px; background: white; page-break-inside: avoid; break-inside: avoid; }
-    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; orphans: 1; widows: 1; }
-    .content { display: flex; flex-direction: column; gap: 3px; orphans: 1; widows: 1; }`
-      
-      htmlForIOS = htmlForIOS.replace(
-        /.product-item \{ border: 1px solid #999; padding: 3px; display: flex; align-items: center; gap: 3px; font-size: 8px; background: white; \}/,
-        improvedCSS.split('\n')[1].trim()
-      )
-      
-      // O mejor, reemplazar todo el bloque de estilos relevantes de una forma más limpia
+      // Agregar CSS mejorado para iOS con márgenes más grandes y protección contra cortes
       htmlForIOS = htmlForIOS.replace(
         /<\/style>/,
         `    /* iOS optimizations para evitar cortes de items */
-    .product-item { page-break-inside: avoid !important; break-inside: avoid !important; }
-    .category-section { orphans: 1; widows: 1; }
-    .products-grid { orphans: 1; widows: 1; }
+    @page { margin: 20mm 25mm; }
+    .print-wrapper { padding-bottom: 20mm; }
+    .content { padding-bottom: 15mm; margin-bottom: 10mm; }
+    .product-item { page-break-inside: avoid !important; break-inside: avoid !important; min-height: 13px; }
+    .category-section { orphans: 2; widows: 2; page-break-inside: auto; }
+    .products-grid { orphans: 2; widows: 2; }
+    footer { margin-top: 20mm; }
   </style>`
       )
       
