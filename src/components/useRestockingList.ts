@@ -250,6 +250,37 @@ export function useRestockingList(initialItems?: ListItem[]) {
   }, [items, isLoaded])
 
   /**
+   * Restore quantities and units from localStorage after items are loaded
+   */
+  useEffect(() => {
+    if (isLoaded && items.length > 0) {
+      try {
+        const saved = localStorage.getItem('quantitiesAndUnits')
+        if (saved) {
+          const quantityData = JSON.parse(saved) as Record<string, { quantity: number; unit?: string }>
+          
+          // Apply saved quantities and units to items
+          setItems(prevItems => 
+            prevItems.map(item => {
+              const saved = quantityData[item.id]
+              if (saved) {
+                return {
+                  ...item,
+                  quantity: saved.quantity,
+                  unit: saved.unit as Unit | undefined
+                }
+              }
+              return item
+            })
+          )
+        }
+      } catch (error) {
+        console.error('Failed to restore quantities and units:', error)
+      }
+    }
+  }, [isLoaded])
+
+  /**
    * Normalize text for comparison (remove accents, lowercase, trim)
    */
   const normalizeText = (text: string): string => {

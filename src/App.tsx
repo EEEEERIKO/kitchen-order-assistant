@@ -23,7 +23,11 @@ function App() {
   const [shareMessage, setShareMessage] = useState<string | null>(null)
   const [showShareModal, setShowShareModal] = useState(false)
   const [shareUrl, setShareUrl] = useState<string>('')
-  const [enableQuantityMode, setEnableQuantityMode] = useState(false)
+  const [enableQuantityMode, setEnableQuantityModeState] = useState(() => {
+    // Restaurar el estado guardado en localStorage
+    const saved = localStorage.getItem('enableQuantityMode')
+    return saved ? JSON.parse(saved) : false
+  })
   const [showClearConfirmModal, setShowClearConfirmModal] = useState(false)
   const [showUnitValidationModal, setShowUnitValidationModal] = useState(false)
   const [unitsValidationError, setUnitsValidationError] = useState<string[]>([])
@@ -32,7 +36,17 @@ function App() {
   const searchInputRef = useRef<HTMLInputElement>(null)
   const incompleteProductRefsMap = useRef<Record<string, HTMLDivElement | null>>({})
 
+  // Función wrapper para guardar el estado en localStorage
+  const setEnableQuantityMode = (value: boolean | ((prev: boolean) => boolean)) => {
+    setEnableQuantityModeState((prev) => {
+      const newValue = typeof value === 'function' ? value(prev) : value
+      localStorage.setItem('enableQuantityMode', JSON.stringify(newValue))
+      return newValue
+    })
+  }
+
   // Detectar si hay items compartidos en la URL al cargar
+
   const [sharedItems, setSharedItems] = useState<any[] | null>(() => {
     const params = new URLSearchParams(window.location.search)
     const sharedList = params.get('list')
@@ -69,6 +83,18 @@ function App() {
     totalItems,
     clearList,
   } = useRestockingList(sharedItems || undefined)
+
+  // Guardar cantidades y unidades en localStorage cuando cambien
+  useEffect(() => {
+    const quantityData = items.reduce((acc, item) => {
+      if (item.quantity || item.unit) {
+        acc[item.id] = { quantity: item.quantity, unit: item.unit }
+      }
+      return acc
+    }, {} as Record<string, { quantity: number; unit?: string }>)
+    
+    localStorage.setItem('quantitiesAndUnits', JSON.stringify(quantityData))
+  }, [items])
 
   // Limpiar el highlight después de 2.5 segundos
   useEffect(() => {
