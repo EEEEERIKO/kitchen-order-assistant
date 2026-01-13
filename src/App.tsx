@@ -25,6 +25,8 @@ function App() {
   const [shareUrl, setShareUrl] = useState<string>('')
   const [enableQuantityMode, setEnableQuantityMode] = useState(false)
   const [showClearConfirmModal, setShowClearConfirmModal] = useState(false)
+  const [showUnitValidationModal, setShowUnitValidationModal] = useState(false)
+  const [unitsValidationError, setUnitsValidationError] = useState<string[]>([])
   const mainContentRef = useRef<HTMLDivElement>(null)
   const categoryRefsMap = useRef<Record<string, HTMLDivElement | null>>({})
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -348,15 +350,6 @@ function App() {
       <LanguageModal
         isOpen={showLanguageModal}
         onSelectLanguage={(language) => {
-          // Validar si modo cantidad está activo y hay productos sin unidad
-          if (enableQuantityMode) {
-            const itemsWithoutUnit = items.filter(item => item.unit === 'unidad' || item.unit === undefined || item.unit === null || item.unit === '')
-            if (itemsWithoutUnit.length > 0) {
-              const productNames = itemsWithoutUnit.map(item => item.productNameEs).join(', ')
-              alert(`⚠️ Atención:\n\nLos siguientes productos no tienen unidad configurada:\n${productNames}\n\nPor favor, configura la unidad antes de descargar.`)
-              return
-            }
-          }
           setShowLanguageModal(false)
           generatePDF(items, language, lastAddedProductId || undefined, enableQuantityMode)
         }}
@@ -395,6 +388,42 @@ function App() {
                 Limpiar Todo
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de validación de unidades */}
+      {showUnitValidationModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-background-dark rounded-lg shadow-2xl p-6 max-w-sm mx-4 animate-in fade-in zoom-in duration-300">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">info</span>
+              </div>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Unidades incompletas</h2>
+            </div>
+            
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              Los siguientes productos no tienen unidad configurada:
+            </p>
+            
+            <div className="bg-amber-50 dark:bg-amber-900/10 rounded-lg p-3 mb-6 max-h-48 overflow-y-auto border border-amber-200 dark:border-amber-800">
+              <ul className="space-y-2">
+                {unitsValidationError.map((product, idx) => (
+                  <li key={idx} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                    <span className="text-amber-600 dark:text-amber-400 font-bold mt-0.5">•</span>
+                    <span>{product}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <button
+              onClick={() => setShowUnitValidationModal(false)}
+              className="w-full px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-medium transition-colors"
+            >
+              Entendido, voy a completar
+            </button>
           </div>
         </div>
       )}
@@ -580,7 +609,20 @@ function App() {
         <div className="sticky bottom-0 bg-white/95 dark:bg-background-dark/95 backdrop-blur border-t border-border-light dark:border-border-dark py-3 sm:py-4 px-3 sm:px-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-40 w-full">
           <div className="w-full px-3 sm:px-6 lg:px-8 flex justify-end">
             <button 
-              onClick={() => setShowLanguageModal(true)}
+              onClick={() => {
+                // Validar primero si modo cantidad está activo
+                if (enableQuantityMode) {
+                  const itemsWithoutUnit = items.filter(item => item.unit === 'unidad' || item.unit === undefined || item.unit === null || item.unit === '')
+                  if (itemsWithoutUnit.length > 0) {
+                    const productNames = itemsWithoutUnit.map(item => item.productNameEs)
+                    setUnitsValidationError(productNames)
+                    setShowUnitValidationModal(true)
+                    return
+                  }
+                }
+                // Si pasa la validación, mostrar modal de idioma
+                setShowLanguageModal(true)
+              }}
               className="w-full sm:w-auto bg-success-green hover:bg-[#244a44] text-white font-medium py-3 px-6 sm:px-8 rounded shadow-md transition-colors flex items-center justify-center space-x-2 sm:space-x-3 uppercase tracking-wide text-xs sm:text-sm"
             >
               <span className="material-symbols-outlined text-lg sm:text-xl">print</span>
