@@ -367,6 +367,19 @@ export function useRestockingList(initialItems?: ListItem[]) {
   }, [])
 
   /**
+   * Update unit for an item
+   */
+  const updateUnit = useCallback((id: string, newUnit: Unit) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id
+          ? { ...item, unit: newUnit }
+          : item
+      )
+    )
+  }, [])
+
+  /**
    * Phase 5: Toggle order marking for a product
    * When unmarking, also clear orderQuantity
    */
@@ -433,6 +446,7 @@ export function useRestockingList(initialItems?: ListItem[]) {
     addProduct,
     removeItem,
     updateQuantity,
+    updateUnit,
     // Phase 5 additions
     toggleOrderMarked,
     updateOrderQuantity,

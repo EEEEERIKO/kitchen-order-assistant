@@ -4,6 +4,8 @@ import type { Unit } from '../app/domain/types'
 interface ProductFormProps {
   onAddProduct: (productName: string, quantity?: number, unit?: Unit, onDuplicateDetected?: (existingName: string) => void) => string
   onProductAdded?: (productName: string, productId: string) => void
+  enableQuantityMode: boolean
+  onToggleQuantityMode: (enabled: boolean) => void
 }
 
 /**
@@ -11,18 +13,17 @@ interface ProductFormProps {
  * 
  * Features:
  * - Large text input for product name (chef-friendly)
- * - Toggle to enable/disable quantity and unit input
- * - Optional quantity and unit fields
+ * - Switch to enable/disable quantity and unit input across all products
+ * - Optional quantity and unit fields when quantity mode is enabled
  * - Clear "Add" button
  * - Keyboard support (Enter to submit)
  * - Input validation and feedback
  * - Duplicate detection with visual feedback
  */
-export function ProductForm({ onAddProduct, onProductAdded }: ProductFormProps) {
+export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, onToggleQuantityMode }: ProductFormProps) {
   const [productName, setProductName] = useState('')
   const [error, setError] = useState('')
   const [duplicateMessage, setDuplicateMessage] = useState('')
-  const [enableQuantity, setEnableQuantity] = useState(false)
   const [quantity, setQuantity] = useState<number>(1)
   const [unit, setUnit] = useState<Unit>('unidad')
 
@@ -44,7 +45,7 @@ export function ProductForm({ onAddProduct, onProductAdded }: ProductFormProps) 
       return
     }
 
-    if (enableQuantity && quantity <= 0) {
+    if (enableQuantityMode && quantity <= 0) {
       setError('La cantidad debe ser mayor a 0')
       return
     }
@@ -52,14 +53,13 @@ export function ProductForm({ onAddProduct, onProductAdded }: ProductFormProps) 
     try {
       const productId = onAddProduct(
         productName.trim(),
-        enableQuantity ? quantity : undefined,
-        enableQuantity ? unit : undefined,
+        enableQuantityMode ? quantity : undefined,
+        enableQuantityMode ? unit : undefined,
         handleDuplicateDetected
       )
       onProductAdded?.(productName.trim(), productId)
       setProductName('')
       setError('')
-      setEnableQuantity(false)
       setQuantity(1)
       setUnit('unidad')
     } catch (err) {
@@ -80,9 +80,33 @@ export function ProductForm({ onAddProduct, onProductAdded }: ProductFormProps) 
 
   return (
     <form onSubmit={handleSubmit} className="pt-4 sm:pt-6">
-      <label htmlFor="product-name" className="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
-        Producto / Produit
-      </label>
+      <div className="flex items-center justify-between mb-4">
+        <label htmlFor="product-name" className="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+          Producto / Produit
+        </label>
+        {/* Switch para cantidad y unidad */}
+        <div className="flex items-center gap-2">
+          <span className={`text-xs font-medium transition-colors ${enableQuantityMode ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`}>
+            Modo cantidad: {enableQuantityMode ? 'ON' : 'OFF'}
+          </span>
+          <button
+            type="button"
+            onClick={() => onToggleQuantityMode(!enableQuantityMode)}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+              enableQuantityMode
+                ? 'bg-primary'
+                : 'bg-gray-300 dark:bg-gray-600'
+            }`}
+            aria-label="Toggle quantity mode"
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                enableQuantityMode ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </button>
+        </div>
+      </div>
       <div className="flex flex-col sm:flex-row gap-0 shadow-sm rounded-md overflow-hidden border border-gray-300 dark:border-gray-600 focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-shadow">
         <div className="flex-grow relative bg-white dark:bg-background-dark">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -107,22 +131,8 @@ export function ProductForm({ onAddProduct, onProductAdded }: ProductFormProps) 
         </button>
       </div>
 
-      {/* Toggle para cantidad y unidad */}
-      <div className="mt-4 flex items-center gap-2">
-        <input
-          type="checkbox"
-          id="enable-quantity"
-          checked={enableQuantity}
-          onChange={(e) => setEnableQuantity(e.target.checked)}
-          className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
-        />
-        <label htmlFor="enable-quantity" className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
-          Agregar cantidad y unidad ahora
-        </label>
-      </div>
-
-      {/* Campos de cantidad y unidad (visibles solo si están habilitados) */}
-      {enableQuantity && (
+      {/* Campos de cantidad y unidad (visibles solo si está habilitado el modo) */}
+      {enableQuantityMode && (
         <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded flex gap-3 items-end">
           <div className="flex-1">
             <label htmlFor="quantity" className="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">

@@ -23,6 +23,7 @@ function App() {
   const [shareMessage, setShareMessage] = useState<string | null>(null)
   const [showShareModal, setShowShareModal] = useState(false)
   const [shareUrl, setShareUrl] = useState<string>('')
+  const [enableQuantityMode, setEnableQuantityMode] = useState(false)
   const mainContentRef = useRef<HTMLDivElement>(null)
   const categoryRefsMap = useRef<Record<string, HTMLDivElement | null>>({})
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -55,6 +56,7 @@ function App() {
     addProduct,
     removeItem,
     updateQuantity,
+    updateUnit,
     toggleOrderMarked,
     updateOrderQuantity,
     getOrderedItems,
@@ -477,6 +479,8 @@ function App() {
             <ProductForm 
               onAddProduct={addProduct}
               onProductAdded={handleProductAdded}
+              enableQuantityMode={enableQuantityMode}
+              onToggleQuantityMode={setEnableQuantityMode}
             />
           </div>
 
@@ -506,6 +510,9 @@ function App() {
               <CategoryGridAll 
                 items={filteredItems}
                 onRemoveItem={removeItem}
+                onUpdateUnit={updateUnit}
+                onUpdateQuantity={updateQuantity}
+                enableQuantityMode={enableQuantityMode}
                 highlightedCategory={lastAddedCategory}
                 highlightedProductId={lastAddedProductId}
                 categoryRefsMap={categoryRefsMap}
@@ -637,6 +644,9 @@ function App() {
 function CategoryGridAll({ 
   items, 
   onRemoveItem, 
+  onUpdateUnit,
+  onUpdateQuantity,
+  enableQuantityMode,
   highlightedCategory, 
   highlightedProductId,
   categoryRefsMap,
@@ -665,6 +675,9 @@ function CategoryGridAll({
             categoryId={catId}
             items={catItems}
             onRemoveItem={onRemoveItem}
+            onUpdateUnit={onUpdateUnit}
+            onUpdateQuantity={onUpdateQuantity}
+            enableQuantityMode={enableQuantityMode}
             isHighlighted={highlightedCategory === catId || selectedCategory === catId}
             highlightedProductId={highlightedProductId}
           />
@@ -674,7 +687,7 @@ function CategoryGridAll({
   )
 }
 
-function CategorySection({ categoryId, items, onRemoveItem, isHighlighted, highlightedProductId }: any) {
+function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpdateQuantity, enableQuantityMode, isHighlighted, highlightedProductId }: any) {
   const colorMap: Record<string, string> = {
     'carnes': 'bg-primary',
     'pescados': 'bg-blue-500',
@@ -689,6 +702,8 @@ function CategorySection({ categoryId, items, onRemoveItem, isHighlighted, highl
 
   const category = Object.values(CATEGORIES).find(c => c.id === categoryId)
   if (!category) return null
+
+  const units: Unit[] = ['kg', 'g', 'L', 'ml', 'unidad', 'caja', 'paquete', 'bote', 'lata', 'docena']
 
   return (
     <div className="bg-surface-light dark:bg-surface-dark rounded-lg shadow-sm border border-border-light dark:border-border-dark overflow-hidden h-fit">
@@ -728,6 +743,36 @@ function CategorySection({ categoryId, items, onRemoveItem, isHighlighted, highl
                 </span>
               )}
             </div>
+
+            {enableQuantityMode && (
+              <div className="flex items-center gap-2 ml-4">
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0.1"
+                  value={item.quantity || 1}
+                  onChange={(e) => onUpdateQuantity(item.id, parseFloat(e.target.value) || 1)}
+                  className="w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-primary focus:border-primary"
+                />
+                <select
+                  value={item.unit || 'no seleccionado'}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    if (value !== 'no seleccionado') {
+                      onUpdateUnit(item.id, value as Unit)
+                    }
+                  }}
+                  className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-primary focus:border-primary"
+                >
+                  <option value="no seleccionado">No seleccionado</option>
+                  {units.map(u => (
+                    <option key={u} value={u}>
+                      {u}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <button
               onClick={() => onRemoveItem(item.id)}
