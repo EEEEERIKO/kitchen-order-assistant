@@ -30,6 +30,7 @@ function App() {
   const mainContentRef = useRef<HTMLDivElement>(null)
   const categoryRefsMap = useRef<Record<string, HTMLDivElement | null>>({})
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const incompleteProductRefsMap = useRef<Record<string, HTMLDivElement | null>>({})
 
   // Detectar si hay items compartidos en la URL al cargar
   const [sharedItems, setSharedItems] = useState<any[] | null>(() => {
@@ -193,6 +194,40 @@ function App() {
         })
       }
     }, 50)
+  }
+
+  // Función para hacer scroll al primer producto incompleto
+  const scrollToFirstIncompleteProduct = () => {
+    // Cerrar modal primero
+    setShowUnitValidationModal(false)
+    
+    // Buscar el primer producto incompleto
+    const firstIncomplete = items.find(item => 
+      item.unit === 'unidad' || item.unit === undefined || item.unit === null || item.unit === ''
+    )
+    
+    if (firstIncomplete) {
+      // Esperar a que el modal se cierre antes de hacer scroll
+      setTimeout(() => {
+        const element = incompleteProductRefsMap.current[firstIncomplete.id]
+        if (element) {
+          const headerOffset = 120
+          const elementPosition = element.getBoundingClientRect().top + window.scrollY
+          const offsetPosition = elementPosition - headerOffset
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          })
+          
+          // Agregar un highlight temporal
+          element.classList.add('ring-2', 'ring-amber-500', 'dark:ring-amber-400')
+          setTimeout(() => {
+            element.classList.remove('ring-2', 'ring-amber-500', 'dark:ring-amber-400')
+          }, 3000)
+        }
+      }, 100)
+    }
   }
 
   // Función para compartir la lista
@@ -419,7 +454,7 @@ function App() {
             </div>
             
             <button
-              onClick={() => setShowUnitValidationModal(false)}
+              onClick={scrollToFirstIncompleteProduct}
               className="w-full px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-medium transition-colors"
             >
               Entendido, voy a completar
@@ -803,11 +838,20 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
       </div>
 
       <div className="divide-y divide-gray-100 dark:divide-gray-800">
-        {items.map((item: any) => (
+        {items.map((item: any) => {
+          const isIncomplete = item.unit === 'unidad' || item.unit === undefined || item.unit === null || item.unit === ''
+          const isQuantityMode = enableQuantityMode
+          
+          return (
           <div
             key={item.id}
+            ref={(el) => {
+              if (el) incompleteProductRefsMap.current[item.id] = el
+            }}
             className={`flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors group ${
               item.id === highlightedProductId ? 'bg-green-50 dark:bg-green-900/10 border-l-4 border-success-green' : ''
+            } ${
+              isQuantityMode && isIncomplete ? 'border-l-4 border-amber-400' : ''
             }`}
           >
             <div className="flex flex-col flex-grow">
@@ -824,6 +868,11 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
               {!item.isKnown && (
                 <span className="inline-block px-2 py-1 bg-orange-500 text-white text-xs font-bold rounded whitespace-nowrap">
                   No reconocido
+                </span>
+              )}
+              {isQuantityMode && isIncomplete && (
+                <span className="inline-flex items-center justify-center w-5 h-5 bg-amber-100 dark:bg-amber-900/30 rounded-full" title="Unidad no seleccionada">
+                  <span className="material-symbols-outlined text-amber-600 dark:text-amber-400" style={{fontSize: '16px'}}>info</span>
                 </span>
               )}
             </div>
@@ -865,10 +914,12 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
               <span className="material-symbols-outlined" style={{fontSize: '18px'}}>close</span>
             </button>
           </div>
-        ))}
+        )
+        })}
       </div>
     </div>
   )
+}
 }
 
 export default App
