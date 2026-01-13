@@ -97,7 +97,7 @@ export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, 
           <button
             type="button"
             onClick={() => onToggleQuantityMode(!enableQuantityMode)}
-            className={`relative inline-flex h-7 w-14 items-center rounded-full transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
+            className={`relative inline-flex h-7 w-14 items-center px-1 rounded-full transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
               enableQuantityMode
                 ? 'bg-success-green shadow-md shadow-success-green/50'
                 : 'bg-gray-300 dark:bg-gray-600'
@@ -107,7 +107,7 @@ export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, 
           >
             <span
               className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-all duration-300 ease-in-out ${
-                enableQuantityMode ? 'translate-x-7' : 'translate-x-1'
+                enableQuantityMode ? 'translate-x-6' : 'translate-x-0'
               }`}
             />
           </button>

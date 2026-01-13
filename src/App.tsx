@@ -24,6 +24,7 @@ function App() {
   const [showShareModal, setShowShareModal] = useState(false)
   const [shareUrl, setShareUrl] = useState<string>('')
   const [enableQuantityMode, setEnableQuantityMode] = useState(false)
+  const [showClearConfirmModal, setShowClearConfirmModal] = useState(false)
   const mainContentRef = useRef<HTMLDivElement>(null)
   const categoryRefsMap = useRef<Record<string, HTMLDivElement | null>>({})
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -349,7 +350,7 @@ function App() {
         onSelectLanguage={(language) => {
           // Validar si modo cantidad está activo y hay productos sin unidad
           if (enableQuantityMode) {
-            const itemsWithoutUnit = items.filter(item => item.unit === 'unidad' || !item.unit)
+            const itemsWithoutUnit = items.filter(item => item.unit === 'unidad' || item.unit === undefined || item.unit === null || item.unit === '')
             if (itemsWithoutUnit.length > 0) {
               const productNames = itemsWithoutUnit.map(item => item.productNameEs).join(', ')
               alert(`⚠️ Atención:\n\nLos siguientes productos no tienen unidad configurada:\n${productNames}\n\nPor favor, configura la unidad antes de descargar.`)
@@ -361,6 +362,42 @@ function App() {
         }}
         onClose={() => setShowLanguageModal(false)}
       />
+
+      {/* Modal de confirmación para limpiar lista */}
+      {showClearConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-background-dark rounded-lg shadow-2xl p-6 max-w-sm mx-4 animate-in fade-in zoom-in duration-300">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                <span className="material-symbols-outlined text-red-600 dark:text-red-400">warning</span>
+              </div>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">¿Limpiar lista?</h2>
+            </div>
+            
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              ¿Estás seguro de que deseas eliminar todos los {items.length} productos de la lista? Esta acción no se puede deshacer.
+            </p>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowClearConfirmModal(false)}
+                className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => {
+                  clearList()
+                  setShowClearConfirmModal(false)
+                }}
+                className="flex-1 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
+              >
+                Limpiar Todo
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Menu Drawer */}
       {showMobileMenu && (
@@ -500,11 +537,7 @@ function App() {
                 Lista Actual <span className="text-lg font-normal text-gray-400 ml-2">({filteredItems.length} productos)</span>
               </h2>
               <button 
-                onClick={() => {
-                  if (confirm('¿Estás seguro de que deseas limpiar toda la lista? Esta acción no se puede deshacer.')) {
-                    clearList()
-                  }
-                }}
+                onClick={() => setShowClearConfirmModal(true)}
                 className="text-xs font-medium text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors uppercase tracking-wider flex items-center gap-1"
               >
                 <span className="material-symbols-outlined text-sm">delete_sweep</span>
