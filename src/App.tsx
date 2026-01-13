@@ -843,17 +843,17 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
           const isQuantityMode = enableQuantityMode
           
           return (
-          <div
-            key={item.id}
-            ref={(el) => {
-              if (el) incompleteProductRefsMap.current[item.id] = el
-            }}
-            className={`flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors group ${
-              item.id === highlightedProductId ? 'bg-green-50 dark:bg-green-900/10 border-l-4 border-success-green' : ''
-            } ${
-              isQuantityMode && isIncomplete ? 'border-l-4 border-amber-400' : ''
-            }`}
-          >
+            <div
+              key={item.id}
+              ref={(el) => {
+                if (el) incompleteProductRefsMap.current[item.id] = el
+              }}
+              className={`flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors group ${
+                item.id === highlightedProductId ? 'bg-green-50 dark:bg-green-900/10 border-l-4 border-success-green' : ''
+              } ${
+                isQuantityMode && isIncomplete ? 'border-l-4 border-amber-400' : ''
+              }`}
+            >
             <div className="flex flex-col flex-grow">
               <span className="font-medium text-gray-900 dark:text-white text-sm">{item.productNameEs}</span>
               <span className="text-gray-400 dark:text-gray-500 italic text-xs font-serif mt-0.5">{item.productNameFr}</span>
@@ -913,8 +913,8 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
             >
               <span className="material-symbols-outlined" style={{fontSize: '18px'}}>close</span>
             </button>
-          </div>
-        )
+            </div>
+          )
         })}
       </div>
     </div>
