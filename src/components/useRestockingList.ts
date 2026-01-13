@@ -284,10 +284,12 @@ export function useRestockingList(initialItems?: ListItem[]) {
    * Also triggers duplicate detection feedback
    */
   const addProduct = useCallback(
-    (productNameEs: string, onDuplicateDetected?: (existingProductName: string) => void): string => {
+    (productNameEs: string, quantity?: number, unit?: Unit, onDuplicateDetected?: (existingProductName: string) => void): string => {
       try {
-        // Use domain logic to classify the product with default unit
-        const newItem = classifyProduct(productNameEs, 1, 'u' as Unit)
+        // Use domain logic to classify the product with provided or default quantity and unit
+        const finalQuantity = quantity ?? 1
+        const finalUnit = unit ?? ('u' as Unit)
+        const newItem = classifyProduct(productNameEs, finalQuantity, finalUnit)
         
         // Initialize Phase 5 fields
         const itemWithOrderFields: ListItem = {
@@ -306,7 +308,7 @@ export function useRestockingList(initialItems?: ListItem[]) {
           const existingIndex = prevItems.findIndex(
             (item) =>
               normalizeText(item.productNameEs) === normalized &&
-              item.unit === ('u' as Unit)
+              item.unit === finalUnit
           )
 
           if (existingIndex >= 0) {
@@ -316,7 +318,7 @@ export function useRestockingList(initialItems?: ListItem[]) {
             const updated = [...prevItems]
             updated[existingIndex] = {
               ...updated[existingIndex],
-              quantity: updated[existingIndex].quantity + 1,
+              quantity: updated[existingIndex].quantity + finalQuantity,
             }
             productId = updated[existingIndex].id
             
