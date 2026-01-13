@@ -288,7 +288,7 @@ export function useRestockingList(initialItems?: ListItem[]) {
       try {
         // Use domain logic to classify the product with provided or default quantity and unit
         const finalQuantity = quantity ?? 1
-        const finalUnit = unit ?? ('u' as Unit)
+        const finalUnit = unit ?? undefined
         const newItem = classifyProduct(productNameEs, finalQuantity, finalUnit)
         
         // Initialize Phase 5 fields

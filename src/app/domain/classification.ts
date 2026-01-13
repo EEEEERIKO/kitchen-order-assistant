@@ -96,7 +96,7 @@ export function getCategoryById(categoryId: CategoryId): Category | undefined {
 export function classifyProduct(
   productNameEs: string,
   quantity: number,
-  unit: Unit
+  unit?: Unit
 ): ListItem {
   // Validar entrada básica
   if (!productNameEs || productNameEs.trim().length === 0) {

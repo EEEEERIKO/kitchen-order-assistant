@@ -56,7 +56,7 @@ export interface ListItem {
   categoryNameEs: string        // Nombre de categoría en español
   categoryNameFr: string        // Nombre de categoría en francés
   quantity: number              // 2, 10, 5.5, etc. (cantidad observada)
-  unit: Unit                    // kg, unidad, litro, etc.
+  unit?: Unit                   // kg, unidad, litro, etc. (opcional para validación)
   productNameFr: string         // Traducción al francés
   isKnown: boolean              // true si existe en diccionario, false si es desconocido
   // Phase 5: Campos de pedido

@@ -649,9 +649,6 @@ function App() {
                 // Validar primero si modo cantidad está activo
                 if (enableQuantityMode) {
                   const itemsWithoutUnit = items.filter(item => item.unit === 'unidad' || item.unit === undefined || item.unit === null || item.unit === '')
-                  console.log('Items sin unidad:', itemsWithoutUnit)
-                  console.log('Total items:', items)
-                  console.log('Items con unit:', items.map(i => ({ name: i.productNameEs, unit: i.unit })))
                   if (itemsWithoutUnit.length > 0) {
                     const productNames = itemsWithoutUnit.map(item => item.productNameEs)
                     setUnitsValidationError(productNames)
