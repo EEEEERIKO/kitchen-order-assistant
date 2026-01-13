@@ -920,7 +920,6 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
     </div>
   )
 }
-}
 
 export default App
 
