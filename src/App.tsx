@@ -347,6 +347,16 @@ function App() {
       <LanguageModal
         isOpen={showLanguageModal}
         onSelectLanguage={(language) => {
+          // Validar si modo cantidad está activo y hay productos sin unidad
+          if (enableQuantityMode) {
+            const itemsWithoutUnit = items.filter(item => item.unit === 'unidad' || !item.unit)
+            if (itemsWithoutUnit.length > 0) {
+              const productNames = itemsWithoutUnit.map(item => item.productNameEs).join(', ')
+              alert(`⚠️ Atención:\n\nLos siguientes productos no tienen unidad configurada:\n${productNames}\n\nPor favor, configura la unidad antes de descargar.`)
+              setShowLanguageModal(false)
+              return
+            }
+          }
           setShowLanguageModal(false)
           generatePDF(items, language, lastAddedProductId || undefined)
         }}

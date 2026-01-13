@@ -116,15 +116,18 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProd
 
     categoryItems.forEach((item: ListItem) => {
       const productName = language === 'es' ? item.productNameEs : item.productNameFr
+      const quantityValue = item.quantity && item.unit && item.unit !== 'unidad' ? item.quantity : ''
+      const unitValue = item.unit && item.unit !== 'unidad' ? item.unit : ''
+      
       html += `
           <div class="product-item">
             <div class="checkbox"></div>
             <span class="product-name">${productName}</span>
             <div class="product-fields">
               <span class="field-label">${cantLabel}</span>
-              <div class="field-box"></div>
+              <div class="field-box">${quantityValue}</div>
               <span class="field-label">${unitLabel}</span>
-              <div class="field-box"></div>
+              <div class="field-box">${unitValue}</div>
             </div>
           </div>`
     })

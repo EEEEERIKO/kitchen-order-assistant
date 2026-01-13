@@ -85,23 +85,24 @@ export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, 
           Producto / Produit
         </label>
         {/* Switch para cantidad y unidad */}
-        <div className="flex items-center gap-2">
-          <span className={`text-xs font-medium transition-colors ${enableQuantityMode ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`}>
-            Modo cantidad: {enableQuantityMode ? 'ON' : 'OFF'}
+        <div className="flex items-center gap-3">
+          <span className={`text-sm font-semibold transition-colors ${enableQuantityMode ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`}>
+            {enableQuantityMode ? '📏 Cantidades activas' : '📝 Solo productos'}
           </span>
           <button
             type="button"
             onClick={() => onToggleQuantityMode(!enableQuantityMode)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+            className={`relative inline-flex h-8 w-14 items-center rounded-full transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
               enableQuantityMode
-                ? 'bg-primary'
+                ? 'bg-success-green shadow-md shadow-success-green/50'
                 : 'bg-gray-300 dark:bg-gray-600'
             }`}
-            aria-label="Toggle quantity mode"
+            aria-label="Alternar modo de cantidades"
+            title={enableQuantityMode ? 'Desactivar cantidades' : 'Activar cantidades'}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                enableQuantityMode ? 'translate-x-6' : 'translate-x-1'
+              className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-all duration-300 ease-in-out ${
+                enableQuantityMode ? 'translate-x-7' : 'translate-x-1'
               }`}
             />
           </button>
