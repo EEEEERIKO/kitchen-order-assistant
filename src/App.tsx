@@ -353,12 +353,11 @@ function App() {
             if (itemsWithoutUnit.length > 0) {
               const productNames = itemsWithoutUnit.map(item => item.productNameEs).join(', ')
               alert(`⚠️ Atención:\n\nLos siguientes productos no tienen unidad configurada:\n${productNames}\n\nPor favor, configura la unidad antes de descargar.`)
-              setShowLanguageModal(false)
               return
             }
           }
           setShowLanguageModal(false)
-          generatePDF(items, language, lastAddedProductId || undefined)
+          generatePDF(items, language, lastAddedProductId || undefined, enableQuantityMode)
         }}
         onClose={() => setShowLanguageModal(false)}
       />

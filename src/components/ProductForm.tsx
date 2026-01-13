@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { FiList, FiPackage } from 'react-icons/fi'
 import type { Unit } from '../app/domain/types'
 
 interface ProductFormProps {
@@ -86,13 +87,17 @@ export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, 
         </label>
         {/* Switch para cantidad y unidad */}
         <div className="flex items-center gap-3">
-          <span className={`text-sm font-semibold transition-colors ${enableQuantityMode ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`}>
-            {enableQuantityMode ? '📏 Cantidades activas' : '📝 Solo productos'}
-          </span>
+          <div className="flex items-center gap-2">
+            {!enableQuantityMode && <FiList className="w-4 h-4 text-gray-500 dark:text-gray-400" />}
+            {enableQuantityMode && <FiPackage className="w-4 h-4 text-primary" />}
+            <span className={`text-sm font-semibold transition-colors ${enableQuantityMode ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`}>
+              {enableQuantityMode ? 'Cantidades activas' : 'Solo productos'}
+            </span>
+          </div>
           <button
             type="button"
             onClick={() => onToggleQuantityMode(!enableQuantityMode)}
-            className={`relative inline-flex h-8 w-14 items-center rounded-full transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
+            className={`relative inline-flex h-7 w-12 items-center rounded-full transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
               enableQuantityMode
                 ? 'bg-success-green shadow-md shadow-success-green/50'
                 : 'bg-gray-300 dark:bg-gray-600'
@@ -101,8 +106,8 @@ export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, 
             title={enableQuantityMode ? 'Desactivar cantidades' : 'Activar cantidades'}
           >
             <span
-              className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-all duration-300 ease-in-out ${
-                enableQuantityMode ? 'translate-x-7' : 'translate-x-1'
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-all duration-300 ease-in-out ${
+                enableQuantityMode ? 'translate-x-6' : 'translate-x-0.5'
               }`}
             />
           </button>

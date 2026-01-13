@@ -7,7 +7,7 @@ interface PDFGeneratorProps {
   language: 'es' | 'fr'
 }
 
-function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProductId?: string): { html: string; filename: string } {
+function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProductId?: string, enableQuantityMode: boolean = false): { html: string; filename: string } {
   const groupedAndOrdered = getGroupedAndOrderedProducts(items, lastAddedProductId)
   const allCategories = getAllCategories()
   const categoryMap = new Map(allCategories.map((cat) => [cat.id, cat]))
@@ -68,7 +68,7 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProd
     .product-name { font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .product-fields { display: flex; align-items: center; gap: 1px; font-size: 6.5px; flex-shrink: 0; }
     .field-label { color: #666; font-weight: 400; white-space: nowrap; }
-    .field-box { border: 1px solid #999; width: 16px; height: 9px; background: #f8f8f8; flex-shrink: 0; }
+    .field-box { border: 1px solid #999; width: 16px; height: 9px; background: #f8f8f8; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 6px; font-weight: 500; }
     footer { border-top: 2px solid #000; padding-top: 6px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 8px; font-family: 'Courier New', monospace; color: #666; page-break-before: avoid; }
     footer:not(:last-of-type) { display: none; }
     @page :not(:last) footer { display: none; }
@@ -116,8 +116,9 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProd
 
     categoryItems.forEach((item: ListItem) => {
       const productName = language === 'es' ? item.productNameEs : item.productNameFr
-      const quantityValue = item.quantity && item.unit && item.unit !== 'unidad' ? item.quantity : ''
-      const unitValue = item.unit && item.unit !== 'unidad' ? item.unit : ''
+      // Solo mostrar valores si enableQuantityMode está activo
+      const quantityValue = enableQuantityMode && item.quantity && item.unit && item.unit !== 'unidad' ? item.quantity : ''
+      const unitValue = enableQuantityMode && item.unit && item.unit !== 'unidad' ? item.unit : ''
       
       html += `
           <div class="product-item">
@@ -154,8 +155,8 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProd
   return { html, filename: pdfFilename }
 }
 
-export function generatePDF(items: ListItem[], language: 'es' | 'fr', lastAddedProductId?: string): void {
-  const { html, filename } = generatePDFHTML(items, language, lastAddedProductId)
+export function generatePDF(items: ListItem[], language: 'es' | 'fr', lastAddedProductId?: string, enableQuantityMode: boolean = false): void {
+  const { html, filename } = generatePDFHTML(items, language, lastAddedProductId, enableQuantityMode)
   
   // Detectar si es iOS (iPhone, iPad, iPod)
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
