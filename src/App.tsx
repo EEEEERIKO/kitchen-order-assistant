@@ -622,6 +622,7 @@ function App() {
                 highlightedCategory={lastAddedCategory}
                 highlightedProductId={lastAddedProductId}
                 categoryRefsMap={categoryRefsMap}
+                incompleteProductRefsMap={incompleteProductRefsMap}
                 selectedCategory={selectedCategory}
               />
             </div>
@@ -769,6 +770,7 @@ function CategoryGridAll({
   highlightedCategory, 
   highlightedProductId,
   categoryRefsMap,
+  incompleteProductRefsMap,
   selectedCategory
 }: any) {
   const { groupedByCategory } = useMemo(() => {
@@ -799,6 +801,7 @@ function CategoryGridAll({
             enableQuantityMode={enableQuantityMode}
             isHighlighted={highlightedCategory === catId || selectedCategory === catId}
             highlightedProductId={highlightedProductId}
+            incompleteProductRefsMap={incompleteProductRefsMap}
           />
         </div>
       ))}
@@ -806,7 +809,7 @@ function CategoryGridAll({
   )
 }
 
-function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpdateQuantity, enableQuantityMode, isHighlighted, highlightedProductId }: any) {
+function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpdateQuantity, enableQuantityMode, isHighlighted, highlightedProductId, incompleteProductRefsMap }: any) {
   const colorMap: Record<string, string> = {
     'carnes': 'bg-primary',
     'pescados': 'bg-blue-500',
