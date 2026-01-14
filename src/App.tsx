@@ -10,7 +10,6 @@ import { useLanguage } from './app/i18n/LanguageProvider'
 import { useRestockingList, encodeListForSharing, decodeListFromShare } from './components/useRestockingList'
 import { classifyProduct } from './app/domain/classification'
 import { RESTAURANT_CONFIG } from './config/restaurant'
-import { ConfigTest } from './components/ConfigTest'
 import { CATEGORIES } from './app/domain/dictionary'
 import type { Unit } from './app/domain/types'
 
