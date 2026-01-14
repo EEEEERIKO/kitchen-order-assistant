@@ -1,5 +1,6 @@
 import './App.css'
 import { useState, useEffect, useMemo, useRef } from 'react'
+import { MdInventory2, MdRestaurant } from 'react-icons/md'
 import { ProductForm } from './components/ProductForm'
 import { CategorizedProductList } from './components/CategorizedProductList'
 import { LanguageModal } from './components/LanguageModal'
@@ -8,6 +9,7 @@ import { generatePDF } from './components/PDFGenerator'
 import { useLanguage } from './app/i18n/LanguageProvider'
 import { useRestockingList, encodeListForSharing, decodeListFromShare } from './components/useRestockingList'
 import { classifyProduct } from './app/domain/classification'
+import { RESTAURANT_CONFIG } from './config/restaurant'
 import { CATEGORIES } from './app/domain/dictionary'
 import type { Unit } from './app/domain/types'
 
@@ -315,7 +317,8 @@ function App() {
           <div className="flex justify-between h-16 sm:h-20 items-center">
             <div className="flex items-center space-x-4 sm:space-x-8">
               <a className="flex items-center space-x-3 group" href="#">
-                <img src="/images/descarga.png" alt="Le Rendez-Vous" className="h-14 sm:h-20 group-hover:opacity-80 transition-opacity" />
+                <MdRestaurant className="text-3xl sm:text-4xl text-primary dark:text-white group-hover:scale-110 transition-transform" />
+                <span className="font-display font-bold text-2xl sm:text-3xl text-primary dark:text-white group-hover:opacity-80 transition-opacity hidden sm:inline">Chef Inventario</span>
               </a>
               <div className="hidden md:flex space-x-8 pl-8 border-l border-gray-200 dark:border-gray-700 ml-4 h-8 items-center">
                 <a className="text-primary dark:text-white font-medium hover:opacity-70 transition-opacity border-b-2 border-primary dark:border-white" href="#">Panel</a>
@@ -598,15 +601,52 @@ function App() {
 
         {/* Main Content Area */}
         <div className="flex-grow space-y-6" ref={mainContentRef}>
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-sm border border-border-light dark:border-border-dark">
-            <div>
-              <h1 className="font-display text-3xl font-bold mb-2 text-primary dark:text-white">Lista de Reposición</h1>
-              <p className="text-text-secondary-light dark:text-text-secondary-dark text-xs tracking-wide uppercase font-medium">Panel del Chef Ejecutivo</p>
+          {/* Header con Información del Restaurante */}
+          <div className="bg-surface-light dark:bg-surface-dark rounded-lg shadow-sm border border-border-light dark:border-border-dark overflow-hidden">
+            {/* Sección de contacto superior */}
+            <div className="bg-gradient-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 px-6 py-3 border-b border-border-light dark:border-border-dark flex flex-wrap items-center justify-between gap-4 text-sm">
+              <div className="flex items-center gap-4 flex-wrap">
+                <a href={`tel:${RESTAURANT_CONFIG.phone}`} className="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">
+                  <span className="material-symbols-outlined text-lg">phone</span>
+                  <span>{RESTAURANT_CONFIG.phone}</span>
+                </a>
+                <a href={`mailto:${RESTAURANT_CONFIG.email}`} className="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">
+                  <span className="material-symbols-outlined text-lg">mail</span>
+                  <span>{RESTAURANT_CONFIG.email}</span>
+                </a>
+              </div>
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                <span className="material-symbols-outlined text-lg">location_on</span>
+                <span>{RESTAURANT_CONFIG.address}</span>
+              </div>
             </div>
-            <div className="mt-4 md:mt-0 text-right">
-              <span className="text-xs text-gray-400 uppercase tracking-wider block">Fecha</span>
-              <div className="text-sm font-medium dark:text-white">{new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+
+            {/* Sección principal */}
+            <div className="p-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
+              <div className="flex items-center gap-4">
+                {/* Logo */}
+                {RESTAURANT_CONFIG.logo && (
+                  <div className="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg bg-white dark:bg-gray-800 p-2 border border-border-light dark:border-border-dark flex items-center justify-center">
+                    <img 
+                      src={RESTAURANT_CONFIG.logo} 
+                      alt={RESTAURANT_CONFIG.name}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                )}
+                
+                {/* Nombre y descripción */}
+                <div>
+                  <h1 className="font-display text-3xl font-bold text-primary dark:text-white">{RESTAURANT_CONFIG.name}</h1>
+                  <p className="text-text-secondary-light dark:text-text-secondary-dark text-xs tracking-wide uppercase font-medium mt-1">{RESTAURANT_CONFIG.tagline}</p>
+                </div>
+              </div>
+
+              {/* Fecha */}
+              <div className="text-right">
+                <span className="text-xs text-gray-400 uppercase tracking-wider block">Fecha</span>
+                <div className="text-sm font-medium dark:text-white">{new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+              </div>
             </div>
           </div>
 

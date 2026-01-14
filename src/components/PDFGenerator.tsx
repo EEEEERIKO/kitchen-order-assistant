@@ -1,6 +1,7 @@
 import type { ListItem } from '../app/domain/types'
 import { getGroupedAndOrderedProducts } from './grouping'
 import { getAllCategories } from '../app/domain/classification'
+import { RESTAURANT_CONFIG } from '../config/restaurant'
 
 interface PDFGeneratorProps {
   items: ListItem[]
@@ -29,9 +30,9 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProd
   const title = language === 'es' ? 'Lista de Reposición' : 'Liste de Réapprovisionnement'
   const cantLabel = language === 'es' ? 'Cant:' : 'Qte:'
   const unitLabel = language === 'es' ? 'Unidad:' : 'Unité:'
-  const subtitle = 'Le Rendez-Vous'
-  const companyName = 'Le Rendez-Vous System'
-  const docId = 'ID: LRV-0026'
+  const subtitle = RESTAURANT_CONFIG.name
+  const companyName = RESTAURANT_CONFIG.name
+  const docId = `${RESTAURANT_CONFIG.address}`
   const pdfFilename = `Lista_Reposicion_${day}-${month}-${year}_${hours}-${minutes}-${seconds}`
 
   let html = `<!DOCTYPE html>
@@ -145,8 +146,8 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProd
     
     <footer>
       <span>${companyName}</span>
-      <span>${docId}</span>
-      <span></span>
+      <span>${RESTAURANT_CONFIG.address}</span>
+      <span>${RESTAURANT_CONFIG.phone} | ${RESTAURANT_CONFIG.email}</span>
     </footer>
   </div>
 </body>
