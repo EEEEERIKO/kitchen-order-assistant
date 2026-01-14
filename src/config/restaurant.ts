@@ -11,24 +11,24 @@
  */
 
 export const RESTAURANT_CONFIG = {
-  // Nombre del restaurante
-  name: 'Mi Restaurante',
+  // Nombre del restaurante - CAMBIO MANUAL TEST
+  name: 'Le Rendez-Vous Restaurant',
   
   // Logo del restaurante (URL o ruta relativa a public/)
   // Ejemplos:
   // - './logo.png' (archivo en public/logo.png)
   // - './images/logo.png' (archivo en public/images/logo.png)
   // - 'https://example.com/logo.png' (URL externa)
-  logo: './images/chef-logo.png',
+  logo: './images/descarga.png',
   
   // Dirección del restaurante
-  address: 'Calle Principal 123, Ciudad, País',
+  address: 'Rte du Lac 14, 1938 Champex-Lac',
   
   // Número de teléfono de contacto
-  phone: '+34 123 456 789',
+  phone: '+41 027 565 36 70',
   
   // Correo electrónico de contacto
-  email: 'info@mirestaurante.com',
+  email: 'info@lerendezvous.ch',
   
   // Slogan o descripción corta (opcional)
   tagline: 'Panel del Chef Ejecutivo',

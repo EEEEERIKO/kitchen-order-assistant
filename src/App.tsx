@@ -1,5 +1,6 @@
 import './App.css'
 import { useState, useEffect, useMemo, useRef } from 'react'
+import { MdInventory2, MdRestaurant } from 'react-icons/md'
 import { ProductForm } from './components/ProductForm'
 import { CategorizedProductList } from './components/CategorizedProductList'
 import { LanguageModal } from './components/LanguageModal'
@@ -9,6 +10,7 @@ import { useLanguage } from './app/i18n/LanguageProvider'
 import { useRestockingList, encodeListForSharing, decodeListFromShare } from './components/useRestockingList'
 import { classifyProduct } from './app/domain/classification'
 import { RESTAURANT_CONFIG } from './config/restaurant'
+import { ConfigTest } from './components/ConfigTest'
 import { CATEGORIES } from './app/domain/dictionary'
 import type { Unit } from './app/domain/types'
 
@@ -316,7 +318,8 @@ function App() {
           <div className="flex justify-between h-16 sm:h-20 items-center">
             <div className="flex items-center space-x-4 sm:space-x-8">
               <a className="flex items-center space-x-3 group" href="#">
-                <img src="/images/descarga.png" alt="Le Rendez-Vous" className="h-14 sm:h-20 group-hover:opacity-80 transition-opacity" />
+                <MdRestaurant className="text-3xl sm:text-4xl text-primary dark:text-white group-hover:scale-110 transition-transform" />
+                <span className="font-display font-bold text-2xl sm:text-3xl text-primary dark:text-white group-hover:opacity-80 transition-opacity hidden sm:inline">Chef Inventario</span>
               </a>
               <div className="hidden md:flex space-x-8 pl-8 border-l border-gray-200 dark:border-gray-700 ml-4 h-8 items-center">
                 <a className="text-primary dark:text-white font-medium hover:opacity-70 transition-opacity border-b-2 border-primary dark:border-white" href="#">Panel</a>
