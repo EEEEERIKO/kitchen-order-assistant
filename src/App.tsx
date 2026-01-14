@@ -38,7 +38,7 @@ function App() {
 
   // Función wrapper para guardar el estado en localStorage
   const setEnableQuantityMode = (value: boolean | ((prev: boolean) => boolean)) => {
-    setEnableQuantityModeState((prev) => {
+    setEnableQuantityModeState((prev: boolean) => {
       const newValue = typeof value === 'function' ? value(prev) : value
       localStorage.setItem('enableQuantityMode', JSON.stringify(newValue))
       return newValue
@@ -229,7 +229,7 @@ function App() {
     
     // Buscar el primer producto incompleto
     const firstIncomplete = items.find(item => 
-      item.unit === 'unidad' || item.unit === undefined || item.unit === null || item.unit === ''
+      item.unit === 'unidad' || item.unit === undefined || item.unit === null
     )
     
     if (firstIncomplete) {
@@ -674,7 +674,7 @@ function App() {
               onClick={() => {
                 // Validar primero si modo cantidad está activo
                 if (enableQuantityMode) {
-                  const itemsWithoutUnit = items.filter(item => item.unit === 'unidad' || item.unit === undefined || item.unit === null || item.unit === '')
+                  const itemsWithoutUnit = items.filter(item => item.unit === 'unidad' || item.unit === undefined || item.unit === null)
                   if (itemsWithoutUnit.length > 0) {
                     const productNames = itemsWithoutUnit.map(item => item.productNameEs)
                     setUnitsValidationError(productNames)
