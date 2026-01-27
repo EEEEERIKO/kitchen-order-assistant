@@ -714,7 +714,7 @@ function App() {
               onClick={() => {
                 // Validar primero si modo cantidad está activo
                 if (enableQuantityMode) {
-                  const itemsWithoutUnit = items.filter(item => item.unit === 'unidad' || item.unit === undefined || item.unit === null)
+                  const itemsWithoutUnit = items.filter(item => !item.unit)
                   if (itemsWithoutUnit.length > 0) {
                     const productNames = itemsWithoutUnit.map(item => item.productNameEs)
                     setUnitsValidationError(productNames)
@@ -908,7 +908,7 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
 
       <div className="divide-y divide-gray-100 dark:divide-gray-800">
         {items.map((item: any) => {
-          const isIncomplete = item.unit === 'unidad' || item.unit === undefined || item.unit === null || item.unit === ''
+          const isIncomplete = !item.unit
           const isQuantityMode = enableQuantityMode
           
           return (
@@ -951,22 +951,19 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
                 <input
                   type="number"
                   step="0.1"
-                  min="0.1"
+                  min="0"
                   value={item.quantity || 1}
-                  onChange={(e) => onUpdateQuantity(item.id, parseFloat(e.target.value) || 1)}
+                  onChange={(e) => onUpdateQuantity(item.id, parseFloat(e.target.value) || 0)}
                   className="w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-primary focus:border-primary"
                 />
                 <select
-                  value={item.unit || 'no seleccionado'}
+                  value={item.unit || 'unidad'}
                   onChange={(e) => {
                     const value = e.target.value
-                    if (value !== 'no seleccionado') {
-                      onUpdateUnit(item.id, value as Unit)
-                    }
+                    onUpdateUnit(item.id, value as Unit)
                   }}
                   className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-primary focus:border-primary"
                 >
-                  <option value="no seleccionado">No seleccionado</option>
                   {units.map(u => (
                     <option key={u} value={u}>
                       {u}

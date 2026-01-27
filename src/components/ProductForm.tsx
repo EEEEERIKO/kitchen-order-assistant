@@ -46,8 +46,8 @@ export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, 
       return
     }
 
-    if (enableQuantityMode && quantity <= 0) {
-      setError('La cantidad debe ser mayor a 0')
+    if (enableQuantityMode && quantity < 0) {
+      setError('La cantidad no puede ser negativa')
       return
     }
 
@@ -148,7 +148,7 @@ export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, 
               id="quantity"
               type="number"
               step="0.1"
-              min="0.1"
+              min="0"
               value={quantity}
               onChange={(e) => setQuantity(parseFloat(e.target.value) || 0)}
               className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-1 focus:ring-primary focus:border-primary"
