@@ -2,6 +2,7 @@ import type { ListItem } from '../app/domain/types'
 import { getGroupedAndOrderedProducts } from './grouping'
 import { getAllCategories } from '../app/domain/classification'
 import { RESTAURANT_CONFIG } from '../config/restaurant'
+import { getTranslations, type LanguageCode } from '../app/i18n/translations'
 
 interface PDFGeneratorProps {
   items: ListItem[]
@@ -9,6 +10,7 @@ interface PDFGeneratorProps {
 }
 
 function generatePDFHTML(items: ListItem[], language: 'es' | 'fr' | 'en', lastAddedProductId?: string, enableQuantityMode: boolean = false): { html: string; filename: string } {
+  const t = getTranslations(language as LanguageCode)
   const groupedAndOrdered = getGroupedAndOrderedProducts(items, lastAddedProductId)
   const allCategories = getAllCategories()
   const categoryMap = new Map(allCategories.map((cat) => [cat.id, cat]))
@@ -23,13 +25,15 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr' | 'en', lastAd
   
   const dateStr = language === 'es'
     ? now.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
-    : now.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })
+    : language === 'fr'
+    ? now.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })
+    : now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
   const timeStr = `${hours}:${minutes}`
-  const dateLabel = language === 'es' ? 'Fecha:' : 'Date:'
-  const timeLabel = language === 'es' ? 'Hora:' : 'Heure:'
-  const title = language === 'es' ? 'Lista de Reposición' : 'Liste de Réapprovisionnement'
-  const cantLabel = language === 'es' ? 'Cant:' : 'Qte:'
-  const unitLabel = language === 'es' ? 'Unidad:' : 'Unité:'
+  const dateLabel = language === 'es' ? 'Fecha:' : language === 'fr' ? 'Date:' : 'Date:'
+  const timeLabel = language === 'es' ? 'Hora:' : language === 'fr' ? 'Heure:' : 'Time:'
+  const title = t.pdf.restockingListTitle
+  const cantLabel = language === 'es' ? 'Cant:' : language === 'fr' ? 'Qte:' : 'Qty:'
+  const unitLabel = language === 'es' ? 'Unidad:' : language === 'fr' ? 'Unité:' : 'Unit:'
   const subtitle = RESTAURANT_CONFIG.name
   const companyName = RESTAURANT_CONFIG.name
   const docId = `${RESTAURANT_CONFIG.address}`
@@ -312,13 +316,15 @@ export function generatePDF(items: ListItem[], language: 'es' | 'fr' | 'en', las
 }
 
 export function PDFGenerator({ items, language }: PDFGeneratorProps) {
+  const t = getTranslations(language as LanguageCode)
+  
   const handleDownloadPDF = () => {
     generatePDF(items, language)
   }
 
   return (
     <button onClick={handleDownloadPDF} className="pdfGenerator__button">
-      📥 Descargar PDF
+      {t.pdf.downloadButton}
     </button>
   )
 }

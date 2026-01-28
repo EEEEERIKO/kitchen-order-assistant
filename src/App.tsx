@@ -873,6 +873,7 @@ function CategoryGridAll({
 }
 
 function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpdateQuantity, enableQuantityMode, isHighlighted, highlightedProductId, incompleteProductRefsMap }: any) {
+  const { t } = useLanguage()
   const colorMap: Record<string, string> = {
     'carnes': 'bg-primary',
     'pescados': 'bg-blue-500',
@@ -961,7 +962,7 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
                   }}
                   className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-primary focus:border-primary"
                 >
-                  <option value="">No seleccionado</option>
+                  <option value="">{t.form.noUnitSelected}</option>
                   {units.map(u => (
                     <option key={u} value={u}>
                       {u}

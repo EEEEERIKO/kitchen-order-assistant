@@ -1,6 +1,7 @@
 import { MdOutlineLanguage } from 'react-icons/md'
 import { FiX } from 'react-icons/fi'
 import styles from './LanguageModal.module.css'
+import { useLanguage } from '../app/i18n/LanguageProvider'
 
 interface LanguageModalProps {
   isOpen: boolean
@@ -13,6 +14,8 @@ export function LanguageModal({
   onSelectLanguage,
   onClose,
 }: LanguageModalProps) {
+  const { t } = useLanguage()
+  
   if (!isOpen) return null
 
   return (
@@ -24,7 +27,7 @@ export function LanguageModal({
 
         <div className={styles.header}>
           <MdOutlineLanguage size={32} />
-          <h2>Seleccionar idioma</h2>
+          <h2>{t.languageModal.title}</h2>
         </div>
 
         <div className={styles.languageOptions}>
@@ -36,7 +39,7 @@ export function LanguageModal({
             }}
           >
             <span className={styles.flag}>🇪🇸</span>
-            <span className={styles.languageName}>Español</span>
+            <span className={styles.languageName}>{t.languageModal.spanish}</span>
           </button>
 
           <button
@@ -47,12 +50,12 @@ export function LanguageModal({
             }}
           >
             <span className={styles.flag}>🇫🇷</span>
-            <span className={styles.languageName}>Français</span>
+            <span className={styles.languageName}>{t.languageModal.french}</span>
           </button>
         </div>
 
         <p className={styles.hint}>
-          Selecciona el idioma para la lista de reposición
+          {t.languageModal.selectLanguagePrompt}
         </p>
       </div>
     </div>

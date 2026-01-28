@@ -1,6 +1,7 @@
 import type { ListItem } from '../app/domain/types'
 import { groupProductsByCategory, getCategoriesInOrder } from './grouping'
 import { getAllCategories } from '../app/domain/classification'
+import { getTranslations, type LanguageCode } from '../app/i18n/translations'
 import './PrintView.css'
 
 interface PrintViewProps {
@@ -41,6 +42,8 @@ const COMMON_UNITS = ['kg', 'g', 'L', 'ml', 'u', 'doc']
  * - Nombre único con fecha/hora
  */
 export function PrintView({ items, language }: PrintViewProps) {
+  const t = getTranslations(language as LanguageCode)
+  
   // Agrupar por categoría (mostrar todos los productos, no solo marcados)
   const grouped = groupProductsByCategory(items)
   const categoryIds = getCategoriesInOrder()
@@ -74,9 +77,7 @@ export function PrintView({ items, language }: PrintViewProps) {
     return (
       <div className="printView printView--empty">
         <p className="emptyMessage">
-          {language === 'es'
-            ? 'No hay productos en la lista'
-            : 'Aucun produit dans la liste'}
+          {t.print.noProducts}
         </p>
       </div>
     )
@@ -87,7 +88,7 @@ export function PrintView({ items, language }: PrintViewProps) {
       {/* ENCABEZADO */}
       <div className="printView__header">
         <h1 className="printView__title">
-          {language === 'es' ? 'Lista de Reposición' : 'Liste de Réapprovisionnement'}
+          {t.pdf.restockingListTitle}
         </h1>
         <div className="printView__headerInfo">
           <p className="printView__date">

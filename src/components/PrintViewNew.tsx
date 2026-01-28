@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import type { ListItem } from '../app/domain/types'
 import { generatePDF } from './PDFGenerator'
+import { getTranslations, type LanguageCode } from '../app/i18n/translations'
 import './PrintViewNew.css'
 
 interface PrintViewProps {
@@ -34,6 +35,8 @@ function generatePdfFileName(lang: 'es' | 'fr'): string {
  * 4. Usuario ve botón para volver a lista
  */
 export function PrintView({ items, language }: PrintViewProps) {
+  const t = getTranslations(language as LanguageCode)
+  
   useEffect(() => {
     // Generar PDF automáticamente cuando el componente se monta
     // o cuando cambia el idioma
@@ -45,7 +48,7 @@ export function PrintView({ items, language }: PrintViewProps) {
       <div className="printView__info">
         <p>📄 PDF generando...</p>
         <p className="printView__subtext">
-          El archivo se descargará automáticamente
+          {t.print.autoDownloadMessage}
         </p>
       </div>
     </div>
