@@ -385,13 +385,13 @@ export function useRestockingList(initialItems?: ListItem[]) {
 
   /**
    * Update quantity for an item
-   * Prevents quantity from going below 1
+   * Allows any non-negative value including 0
    */
   const updateQuantity = useCallback((id: string, newQuantity: number) => {
     setItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id
-          ? { ...item, quantity: Math.max(1, newQuantity) }
+          ? { ...item, quantity: Math.max(0, newQuantity) }
           : item
       )
     )
@@ -400,7 +400,7 @@ export function useRestockingList(initialItems?: ListItem[]) {
   /**
    * Update unit for an item
    */
-  const updateUnit = useCallback((id: string, newUnit: Unit) => {
+  const updateUnit = useCallback((id: string, newUnit: Unit | undefined) => {
     setItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id

@@ -5,10 +5,10 @@ import { RESTAURANT_CONFIG } from '../config/restaurant'
 
 interface PDFGeneratorProps {
   items: ListItem[]
-  language: 'es' | 'fr'
+  language: 'es' | 'fr' | 'en'
 }
 
-function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProductId?: string, enableQuantityMode: boolean = false): { html: string; filename: string } {
+function generatePDFHTML(items: ListItem[], language: 'es' | 'fr' | 'en', lastAddedProductId?: string, enableQuantityMode: boolean = false): { html: string; filename: string } {
   const groupedAndOrdered = getGroupedAndOrderedProducts(items, lastAddedProductId)
   const allCategories = getAllCategories()
   const categoryMap = new Map(allCategories.map((cat) => [cat.id, cat]))
@@ -156,7 +156,19 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProd
   return { html, filename: pdfFilename }
 }
 
-export function generatePDF(items: ListItem[], language: 'es' | 'fr', lastAddedProductId?: string, enableQuantityMode: boolean = false): void {
+// Flag global para prevenir llamadas concurrentes
+let isPrinting = false
+
+export function generatePDF(items: ListItem[], language: 'es' | 'fr' | 'en', lastAddedProductId?: string, enableQuantityMode: boolean = false): void {
+  // Prevenir múltiples llamadas simultáneas
+  if (isPrinting) {
+    console.log('Ya hay una impresión en proceso, esperando...')
+    setTimeout(() => generatePDF(items, language, lastAddedProductId, enableQuantityMode), 500)
+    return
+  }
+  
+  isPrinting = true
+  
   const { html, filename } = generatePDFHTML(items, language, lastAddedProductId, enableQuantityMode)
   
   // Detectar si es iOS (iPhone, iPad, iPod)
@@ -228,32 +240,74 @@ export function generatePDF(items: ListItem[], language: 'es' | 'fr', lastAddedP
   </style>`
     )
     
-    const iframe = document.createElement('iframe')
-    iframe.style.display = 'none'
-    document.body.appendChild(iframe)
+    // Limpiar TODOS los iframes previos de impresión
+    const cleanup = () => {
+      const oldIframes = document.querySelectorAll('iframe[data-pdf-print="true"]')
+      oldIframes.forEach(old => {
+        try {
+          old.remove()
+        } catch (e) {
+          console.log('Error limpiando iframe:', e)
+        }
+      })
+    }
     
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
-    if (iframeDoc) {
+    cleanup()
+    
+    // Esperar un poco después de limpiar
+    setTimeout(() => {
+      const iframe = document.createElement('iframe')
+      iframe.style.position = 'absolute'
+      iframe.style.width = '0'
+      iframe.style.height = '0'
+      iframe.style.border = 'none'
+      iframe.setAttribute('data-pdf-print', 'true')
+      document.body.appendChild(iframe)
+      
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
+      if (!iframeDoc) {
+        isPrinting = false
+        return
+      }
+      
       iframeDoc.open()
       iframeDoc.write(htmlForPC)
       iframeDoc.close()
       
-      iframe.onload = () => {
-        setTimeout(() => {
-          // Guardar título original y cambiar temporalmente
+      // Esperar a que el iframe esté completamente cargado
+      const attemptPrint = () => {
+        try {
           const originalTitle = document.title
           document.title = filename
           
-          iframe.contentWindow?.print()
-          
-          // Restaurar título original después
-          setTimeout(() => {
-            document.title = originalTitle
-            document.body.removeChild(iframe)
-          }, 1000)
-        }, 250)
+          const win = iframe.contentWindow
+          if (win) {
+            // Forzar focus
+            win.focus()
+            
+            // Ejecutar print
+            win.print()
+            
+            // Limpiar después
+            setTimeout(() => {
+              document.title = originalTitle
+              cleanup()
+              isPrinting = false
+            }, 2000)
+          } else {
+            cleanup()
+            isPrinting = false
+          }
+        } catch (error) {
+          console.error('Error al imprimir:', error)
+          cleanup()
+          isPrinting = false
+        }
       }
-    }
+      
+      // Esperar a que el contenido esté listo
+      setTimeout(attemptPrint, 500)
+    }, 100)
   }
 }
 

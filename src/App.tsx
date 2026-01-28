@@ -11,6 +11,7 @@ import { useRestockingList, encodeListForSharing, decodeListFromShare } from './
 import { classifyProduct } from './app/domain/classification'
 import { RESTAURANT_CONFIG } from './config/restaurant'
 import { CATEGORIES } from './app/domain/dictionary'
+import { getGroupedAndOrderedProducts } from './components/grouping'
 import type { Unit } from './app/domain/types'
 
 function App() {
@@ -714,7 +715,7 @@ function App() {
               onClick={() => {
                 // Validar primero si modo cantidad está activo
                 if (enableQuantityMode) {
-                  const itemsWithoutUnit = items.filter(item => item.unit === 'unidad' || item.unit === undefined || item.unit === null)
+                  const itemsWithoutUnit = items.filter(item => !item.unit)
                   if (itemsWithoutUnit.length > 0) {
                     const productNames = itemsWithoutUnit.map(item => item.productNameEs)
                     setUnitsValidationError(productNames)
@@ -839,18 +840,14 @@ function CategoryGridAll({
   incompleteProductRefsMap,
   selectedCategory
 }: any) {
-  const { groupedByCategory } = useMemo(() => {
-    const grouped: Record<string, any[]> = {}
-    items.forEach((item: any) => {
-      if (!grouped[item.categoryId]) grouped[item.categoryId] = []
-      grouped[item.categoryId].push(item)
-    })
-    return { groupedByCategory: grouped }
-  }, [items])
+  // Usar la función de grouping.ts que ordena las categorías correctamente
+  const orderedCategories = useMemo(() => {
+    return getGroupedAndOrderedProducts(items, highlightedProductId || undefined)
+  }, [items, highlightedProductId])
 
   return (
     <>
-      {Object.entries(groupedByCategory).map(([catId, catItems]: [string, any[]]) => (
+      {orderedCategories.map(([catId, catItems, newProductId]: [string, any[], string | null]) => (
         <div 
           key={catId}
           ref={(el) => { if (el) categoryRefsMap.current[catId] = el }}
@@ -866,7 +863,7 @@ function CategoryGridAll({
             onUpdateQuantity={onUpdateQuantity}
             enableQuantityMode={enableQuantityMode}
             isHighlighted={highlightedCategory === catId || selectedCategory === catId}
-            highlightedProductId={highlightedProductId}
+            highlightedProductId={newProductId}
             incompleteProductRefsMap={incompleteProductRefsMap}
           />
         </div>
@@ -908,7 +905,7 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
 
       <div className="divide-y divide-gray-100 dark:divide-gray-800">
         {items.map((item: any) => {
-          const isIncomplete = item.unit === 'unidad' || item.unit === undefined || item.unit === null || item.unit === ''
+          const isIncomplete = !item.unit
           const isQuantityMode = enableQuantityMode
           
           return (
@@ -950,23 +947,21 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
               <div className="flex items-center gap-2 ml-4">
                 <input
                   type="number"
-                  step="0.1"
-                  min="0.1"
-                  value={item.quantity || 1}
-                  onChange={(e) => onUpdateQuantity(item.id, parseFloat(e.target.value) || 1)}
+                  step="1"
+                  min="0"
+                  value={item.quantity || 0}
+                  onChange={(e) => onUpdateQuantity(item.id, parseInt(e.target.value) || 0)}
                   className="w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-primary focus:border-primary"
                 />
                 <select
-                  value={item.unit || 'no seleccionado'}
+                  value={item.unit || ''}
                   onChange={(e) => {
                     const value = e.target.value
-                    if (value !== 'no seleccionado') {
-                      onUpdateUnit(item.id, value as Unit)
-                    }
+                    onUpdateUnit(item.id, value ? (value as Unit) : undefined)
                   }}
                   className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs focus:ring-1 focus:ring-primary focus:border-primary"
                 >
-                  <option value="no seleccionado">No seleccionado</option>
+                  <option value="">No seleccionado</option>
                   {units.map(u => (
                     <option key={u} value={u}>
                       {u}

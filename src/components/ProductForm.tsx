@@ -25,8 +25,8 @@ export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, 
   const [productName, setProductName] = useState('')
   const [error, setError] = useState('')
   const [duplicateMessage, setDuplicateMessage] = useState('')
-  const [quantity, setQuantity] = useState<number>(1)
-  const [unit, setUnit] = useState<Unit>('unidad')
+  const [quantity, setQuantity] = useState<number>(0)
+  const [unit, setUnit] = useState<Unit | undefined>(undefined)
 
   const units: Unit[] = ['kg', 'g', 'L', 'ml', 'unidad', 'caja', 'paquete', 'bote', 'lata', 'docena']
 
@@ -46,8 +46,8 @@ export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, 
       return
     }
 
-    if (enableQuantityMode && quantity <= 0) {
-      setError('La cantidad debe ser mayor a 0')
+    if (enableQuantityMode && quantity < 0) {
+      setError('La cantidad no puede ser negativa')
       return
     }
 
@@ -61,8 +61,8 @@ export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, 
       onProductAdded?.(productName.trim(), productId)
       setProductName('')
       setError('')
-      setQuantity(1)
-      setUnit('unidad')
+      setQuantity(0)
+      setUnit(undefined)
     } catch (err) {
       setError(
         err instanceof Error
@@ -147,10 +147,10 @@ export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, 
             <input
               id="quantity"
               type="number"
-              step="0.1"
-              min="0.1"
+              step="1"
+              min="0"
               value={quantity}
-              onChange={(e) => setQuantity(parseFloat(e.target.value) || 0)}
+              onChange={(e) => setQuantity(parseInt(e.target.value) || 0)}
               className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-1 focus:ring-primary focus:border-primary"
             />
           </div>
@@ -160,10 +160,11 @@ export function ProductForm({ onAddProduct, onProductAdded, enableQuantityMode, 
             </label>
             <select
               id="unit"
-              value={unit}
-              onChange={(e) => setUnit(e.target.value as Unit)}
+              value={unit || ''}
+              onChange={(e) => setUnit(e.target.value ? (e.target.value as Unit) : undefined)}
               className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-1 focus:ring-primary focus:border-primary"
             >
+              <option value="">No seleccionado</option>
               {units.map(u => (
                 <option key={u} value={u}>
                   {u}
