@@ -6,10 +6,10 @@ import { getTranslations, type LanguageCode } from '../app/i18n/translations'
 
 interface PDFGeneratorProps {
   items: ListItem[]
-  language: 'es' | 'fr' | 'en'
+  language: LanguageCode
 }
 
-function generatePDFHTML(items: ListItem[], language: 'es' | 'fr' | 'en', lastAddedProductId?: string, enableQuantityMode: boolean = false): { html: string; filename: string } {
+function generatePDFHTML(items: ListItem[], language: LanguageCode, lastAddedProductId?: string, enableQuantityMode: boolean = false): { html: string; filename: string } {
   const t = getTranslations(language as LanguageCode)
   const groupedAndOrdered = getGroupedAndOrderedProducts(items, lastAddedProductId)
   const allCategories = getAllCategories()
@@ -23,17 +23,29 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr' | 'en', lastAd
   const minutes = String(now.getMinutes()).padStart(2, '0')
   const seconds = String(now.getSeconds()).padStart(2, '0')
   
-  const dateStr = language === 'es'
-    ? now.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
-    : language === 'fr'
-    ? now.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })
-    : now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  // Configurar locale basado en idioma
+  const localeMap: Record<LanguageCode, string> = {
+    en: 'en-US',
+    fr: 'fr-FR',
+    de: 'de-DE',
+    it: 'it-IT',
+    roh: 'rm-CH', // Romanche de Suiza
+  }
+  
+  const dateStr = now.toLocaleDateString(localeMap[language], { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  })
+  
   const timeStr = `${hours}:${minutes}`
-  const dateLabel = language === 'es' ? 'Fecha:' : language === 'fr' ? 'Date:' : 'Date:'
-  const timeLabel = language === 'es' ? 'Hora:' : language === 'fr' ? 'Heure:' : 'Time:'
+  
+  // Labels dinámicos según idioma
+  const dateLabel = language === 'de' ? 'Datum:' : language === 'it' ? 'Data:' : language === 'roh' ? 'Data:' : 'Date:'
+  const timeLabel = language === 'de' ? 'Zeit:' : language === 'it' ? 'Ora:' : language === 'roh' ? 'Ura:' : language === 'fr' ? 'Heure:' : 'Time:'
   const title = t.pdf.restockingListTitle
-  const cantLabel = language === 'es' ? 'Cant:' : language === 'fr' ? 'Qte:' : 'Qty:'
-  const unitLabel = language === 'es' ? 'Unidad:' : language === 'fr' ? 'Unité:' : 'Unit:'
+  const cantLabel = language === 'de' ? 'Menge:' : language === 'it' ? 'Qtà:' : language === 'roh' ? 'Quant.:' : language === 'fr' ? 'Qte:' : 'Qty:'
+  const unitLabel = language === 'de' ? 'Einheit:' : language === 'it' ? 'Unità:' : language === 'roh' ? 'Unitad:' : language === 'fr' ? 'Unité:' : 'Unit:'
   const subtitle = RESTAURANT_CONFIG.name
   const companyName = RESTAURANT_CONFIG.name
   const docId = `${RESTAURANT_CONFIG.address}`
@@ -110,7 +122,9 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr' | 'en', lastAd
     const category = categoryMap.get(categoryId)
     if (!category) return
     
-    const categoryName = language === 'es' ? category.nameEs : category.nameFr
+    // Usar nameEs para todos los idiomas por ahora (el diccionario tiene nombres en ES/FR)
+    // En futuras versiones, podríamos expandir el diccionario
+    const categoryName = category.nameEs
     const isLarge = categoryItems.length > 8
     const largeClass = isLarge ? ' large' : ''
 
@@ -120,7 +134,8 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr' | 'en', lastAd
         <div class="products-grid">`
 
     categoryItems.forEach((item: ListItem) => {
-      const productName = language === 'es' ? item.productNameEs : item.productNameFr
+      // Usar productNameEs para todos los idiomas por ahora
+      const productName = item.productNameEs
       // Solo mostrar valores si enableQuantityMode está activo
       const quantityValue = enableQuantityMode && item.quantity && item.unit && item.unit !== 'unidad' ? item.quantity : ''
       const unitValue = enableQuantityMode && item.unit && item.unit !== 'unidad' ? item.unit : ''
@@ -163,7 +178,7 @@ function generatePDFHTML(items: ListItem[], language: 'es' | 'fr' | 'en', lastAd
 // Flag global para prevenir llamadas concurrentes
 let isPrinting = false
 
-export function generatePDF(items: ListItem[], language: 'es' | 'fr' | 'en', lastAddedProductId?: string, enableQuantityMode: boolean = false): void {
+export function generatePDF(items: ListItem[], language: LanguageCode, lastAddedProductId?: string, enableQuantityMode: boolean = false): void {
   // Prevenir múltiples llamadas simultáneas
   if (isPrinting) {
     console.log('Ya hay una impresión en proceso, esperando...')

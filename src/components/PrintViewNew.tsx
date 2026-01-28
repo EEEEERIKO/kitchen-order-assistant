@@ -6,7 +6,7 @@ import './PrintViewNew.css'
 
 interface PrintViewProps {
   items: ListItem[]
-  language: 'es' | 'fr'
+  language: LanguageCode
 }
 
 /**

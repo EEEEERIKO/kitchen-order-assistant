@@ -2,10 +2,11 @@ import { MdOutlineLanguage } from 'react-icons/md'
 import { FiX } from 'react-icons/fi'
 import styles from './LanguageModal.module.css'
 import { useLanguage } from '../app/i18n/LanguageProvider'
+import type { LanguageCode } from '../app/i18n/translations'
 
 interface LanguageModalProps {
   isOpen: boolean
-  onSelectLanguage: (language: 'es' | 'fr') => void
+  onSelectLanguage: (language: LanguageCode) => void
   onClose: () => void
 }
 
@@ -34,12 +35,12 @@ export function LanguageModal({
           <button
             className={styles.languageButton}
             onClick={() => {
-              onSelectLanguage('es')
+              onSelectLanguage('en')
               onClose()
             }}
           >
-            <span className={styles.flag}>🇪🇸</span>
-            <span className={styles.languageName}>{t.languageModal.spanish}</span>
+            <span className={styles.flag}>🇬🇧</span>
+            <span className={styles.languageName}>{t.languageModal.english}</span>
           </button>
 
           <button
@@ -51,6 +52,39 @@ export function LanguageModal({
           >
             <span className={styles.flag}>🇫🇷</span>
             <span className={styles.languageName}>{t.languageModal.french}</span>
+          </button>
+
+          <button
+            className={styles.languageButton}
+            onClick={() => {
+              onSelectLanguage('de')
+              onClose()
+            }}
+          >
+            <span className={styles.flag}>🇩🇪</span>
+            <span className={styles.languageName}>Deutsch</span>
+          </button>
+
+          <button
+            className={styles.languageButton}
+            onClick={() => {
+              onSelectLanguage('it')
+              onClose()
+            }}
+          >
+            <span className={styles.flag}>🇮🇹</span>
+            <span className={styles.languageName}>Italiano</span>
+          </button>
+
+          <button
+            className={styles.languageButton}
+            onClick={() => {
+              onSelectLanguage('roh')
+              onClose()
+            }}
+          >
+            <span className={styles.flag}>🇨🇭</span>
+            <span className={styles.languageName}>Rumantsch</span>
           </button>
         </div>
 

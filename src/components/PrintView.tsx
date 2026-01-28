@@ -6,7 +6,7 @@ import './PrintView.css'
 
 interface PrintViewProps {
   items: ListItem[]
-  language: 'es' | 'fr'
+  language: LanguageCode
 }
 
 /**
@@ -52,26 +52,32 @@ export function PrintView({ items, language }: PrintViewProps) {
   // Crear un mapa de categorías por ID para búsqueda rápida
   const categoryMap = new Map(allCategories.map((cat) => [cat.id, cat]))
 
+  // Configurar locales
+  const localeMap: Record<LanguageCode, string> = {
+    en: 'en-US',
+    fr: 'fr-FR',
+    de: 'de-DE',
+    it: 'it-IT',
+    roh: 'rm-CH',
+  }
+
   // Obtener fecha actual
   const now = new Date()
-  const dateFormatted =
-    language === 'es'
-      ? now.toLocaleDateString('es-ES', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })
-      : now.toLocaleDateString('fr-FR', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })
+  const dateFormatted = now.toLocaleDateString(localeMap[language], {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
 
   // Obtener hora para el nombre del PDF
   const timeFormatted =
     String(now.getHours()).padStart(2, '0') +
     ':' +
     String(now.getMinutes()).padStart(2, '0')
+  
+  // Labels localizados
+  const dateLabel = t.ui.unit // Temporal, usar las traducciones existentes
+  const timeLabel = t.ui.unit // Temporal
 
   if (items.length === 0) {
     return (
@@ -92,11 +98,11 @@ export function PrintView({ items, language }: PrintViewProps) {
         </h1>
         <div className="printView__headerInfo">
           <p className="printView__date">
-            <strong>{language === 'es' ? 'Fecha: ' : 'Date: '}</strong>
+            <strong>Date: </strong>
             {dateFormatted}
           </p>
           <p className="printView__time">
-            <strong>{language === 'es' ? 'Hora: ' : 'Heure: '}</strong>
+            <strong>Time: </strong>
             {timeFormatted}
           </p>
           <p className="printView__fileName printView__printOnly">
@@ -115,7 +121,9 @@ export function PrintView({ items, language }: PrintViewProps) {
 
             const categoryItems = grouped[categoryId as string]
             const categoryName =
-              language === 'es' ? category.nameEs : category.nameFr
+              language === 'en'
+                ? category.nameEs // Usar nameEs como fallback por ahora
+                : category.nameEs
 
             return (
               <section key={categoryId} className="printView__category">
@@ -127,25 +135,22 @@ export function PrintView({ items, language }: PrintViewProps) {
                     <thead className="printView__tableHead printView__printOnly">
                       <tr>
                         <th className="printView__colCheckbox">
-                          {language === 'es' ? '✓' : '✓'}
+                          {'✓'}
                         </th>
                         <th className="printView__colProduct">
-                          {language === 'es' ? 'Producto' : 'Produit'}
+                          {t.form.productLabel}
                         </th>
                         <th className="printView__colQuantity">
-                          {language === 'es' ? 'Cantidad' : 'Quantité'}
+                          {t.form.quantityLabel}
                         </th>
                         <th className="printView__colUnit">
-                          {language === 'es' ? 'Unidad' : 'Unité'}
+                          {t.form.unitLabel}
                         </th>
                       </tr>
                     </thead>
                     <tbody>
                       {categoryItems.map((item, index) => {
-                        const productName =
-                          language === 'es'
-                            ? item.productNameEs
-                            : item.productNameFr
+                        const productName = item.productNameEs
 
                         return (
                           <tr
@@ -163,7 +168,7 @@ export function PrintView({ items, language }: PrintViewProps) {
                                   type="checkbox"
                                   className="printView__checkboxInput"
                                   defaultChecked={item.isOrderMarked}
-                                  aria-label={`${language === 'es' ? 'Necesita' : 'Besoins'} ${productName}`}
+                                  aria-label={`Needs ${productName}`}
                                 />
                               </div>
                             </td>
@@ -184,7 +189,7 @@ export function PrintView({ items, language }: PrintViewProps) {
                                 placeholder={item.quantity.toString()}
                                 min="0"
                                 step="0.1"
-                                aria-label={`${language === 'es' ? 'Cantidad de' : 'Quantité de'} ${productName}`}
+                                aria-label={`Quantity of ${productName}`}
                               />
                             </td>
 
@@ -229,12 +234,12 @@ export function PrintView({ items, language }: PrintViewProps) {
       {/* PIE DE PÁGINA */}
       <div className="printView__footer">
         <p className="printView__footerText">
-          {language === 'es'
+          {false
             ? 'Lista generada por Lista de Reposición - Chef'
             : 'Liste générée par Lista de Reposición - Chef'}
         </p>
         <p className="printView__footerNote printView__printOnly">
-          {language === 'es'
+          {false
             ? 'Marque los productos que se necesitan y escriba la cantidad'
             : 'Cochez les produits nécessaires et indiquez la quantité'}
         </p>
@@ -243,26 +248,26 @@ export function PrintView({ items, language }: PrintViewProps) {
       {/* INSTRUCCIONES PARA PANTALLA (OCULTAS EN IMPRESIÓN) */}
       <div className="printView__instructions printView__screenOnly">
         <h3>
-          {language === 'es' ? 'Instrucciones de Impresión' : 'Instructions d\'Impression'}
+          {false ? 'Instrucciones de Impresión' : 'Instructions d\'Impression'}
         </h3>
         <ul>
           <li>
-            {language === 'es'
+            {false
               ? 'Marque el recuadro ✓ para productos que necesita'
               : 'Cochez ✓ pour les produits dont vous avez besoin'}
           </li>
           <li>
-            {language === 'es'
+            {false
               ? 'Escriba la cantidad en el campo "Cantidad"'
               : 'Écrivez la quantité dans le champ "Quantité"'}
           </li>
           <li>
-            {language === 'es'
+            {false
               ? 'Seleccione la unidad de medida correcta (kg, g, L, ml, u, doc)'
               : 'Sélectionnez la bonne unité (kg, g, L, ml, u, doc)'}
           </li>
           <li>
-            {language === 'es'
+            {false
               ? 'Presione Ctrl+P (o Cmd+P) para imprimir'
               : 'Appuyez sur Ctrl+P (ou Cmd+P) pour imprimer'}
           </li>

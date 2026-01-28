@@ -2,9 +2,11 @@ import { useLanguage } from '../app/i18n/LanguageProvider'
 import type { LanguageCode } from '../app/i18n/translations'
 
 const LANGUAGES: { code: LanguageCode; name: string; flag: string }[] = [
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
   { code: 'en', name: 'English', flag: '🇬🇧' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+  { code: 'roh', name: 'Rumantsch', flag: '🇨🇭' },
 ]
 
 export function LanguageSwitcher() {

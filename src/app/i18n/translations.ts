@@ -1,4 +1,4 @@
-export type LanguageCode = 'es' | 'en' | 'fr'
+export type LanguageCode = 'en' | 'fr' | 'de' | 'it' | 'roh'
 
 /**
  * Translations interface - Keys are in English (base language)
@@ -52,6 +52,9 @@ export interface Translations {
     spanish: string
     english: string
     french: string
+    german: string
+    italian: string
+    romansh: string
   }
 
   // Share functionality
@@ -128,107 +131,6 @@ export interface Translations {
 }
 
 export const translations: Record<LanguageCode, Translations> = {
-  es: {
-    nav: {
-      panel: 'Panel',
-      search: 'Buscar productos',
-      info: 'Información del desarrollador',
-      share: 'Compartir Lista',
-      language: 'Idioma',
-    },
-    form: {
-      productLabel: 'Producto',
-      productPlaceholder: 'Ej: pecho de pollo, tomates...',
-      addButton: 'Añadir',
-      quantityLabel: 'Cantidad',
-      unitLabel: 'Unidad',
-      categoryLabel: 'Categoría (opcional)',
-      quantitiesActive: 'Cantidades activas',
-      onlyProducts: 'Solo productos',
-      toggleQuantitiesLabel: 'Alternar modo de cantidades',
-      enableQuantitiesTitle: 'Activar cantidades',
-      disableQuantitiesTitle: 'Desactivar cantidades',
-      emptyProductError: 'El nombre del producto no puede estar vacío',
-      negativeQuantityError: 'La cantidad no puede ser negativa',
-      addProductError: 'Error al añadir el producto',
-      quantityIncreasedMessage: 'Cantidad aumentada',
-      noUnitSelected: 'No seleccionado',
-    },
-    modal: {
-      addProduct: 'Agregar Producto',
-      productName: 'Nombre del producto',
-      quantity: 'Cantidad',
-      unit: 'Unidad',
-      category: 'Categoría (opcional)',
-      add: 'Agregar',
-      cancel: 'Cancelar',
-    },
-    languageModal: {
-      title: 'Idioma',
-      selectLanguagePrompt: 'Selecciona el idioma para la lista de reposición',
-      spanish: 'Español',
-      english: 'Inglés',
-      french: 'Francés',
-    },
-    share: {
-      title: 'Compartir Lista de Reposición',
-      copy: 'Copiar enlace',
-      copied: '¡Enlace acortado copiado!',
-      empty: 'La lista está vacía, agrega productos para compartir',
-      error: 'Error al generar el enlace',
-    },
-    pdf: {
-      title: 'Descargar PDF',
-      downloadButton: '📥 Descargar PDF',
-      spanish: 'Español',
-      french: 'Francés',
-      english: 'Inglés',
-      restockingListTitle: 'Lista de Reposición',
-    },
-    credits: {
-      title: 'Creado Por',
-      createdBy: 'Erik Valencia Cardona',
-      madeWith: 'Hecho con ❤️ para restaurantes',
-    },
-    search: {
-      placeholder: 'Buscar productos...',
-      noResults: 'No se encontraron productos',
-    },
-    print: {
-      noProducts: 'No hay productos en la lista',
-      autoDownloadMessage: 'El archivo se descargará automáticamente',
-    },
-    ui: {
-      categories: 'Categorías',
-      allCategories: 'Todas las categorías',
-      addFirstProduct: 'Agrega tu primer producto',
-      clearList: 'Limpiar lista',
-      deleteConfirm: '¿Estás seguro?',
-      deleteItem: 'Eliminar',
-      restockingList: 'Lista de Reposición - Chef',
-      quantity: 'Cantidad',
-      unit: 'Unidad',
-      remove: 'Eliminar',
-      export: 'Exportar',
-      import: 'Importar',
-      language: 'Español',
-      yes: 'Sí',
-      no: 'No',
-      cancel: 'Cancelar',
-    },
-    units: {
-      kg: 'kg',
-      g: 'g',
-      L: 'L',
-      ml: 'ml',
-      unit: 'unidad',
-      box: 'caja',
-      package: 'paquete',
-      jar: 'bote',
-      can: 'lata',
-      dozen: 'docena',
-    },
-  },
   en: {
     nav: {
       panel: 'Panel',
@@ -270,6 +172,9 @@ export const translations: Record<LanguageCode, Translations> = {
       spanish: 'Spanish',
       english: 'English',
       french: 'French',
+      german: 'German',
+      italian: 'Italian',
+      romansh: 'Romansh',
     },
     share: {
       title: 'Share Restocking List',
@@ -371,6 +276,9 @@ export const translations: Record<LanguageCode, Translations> = {
       spanish: 'Espagnol',
       english: 'Anglais',
       french: 'Français',
+      german: 'Allemand',
+      italian: 'Italien',
+      romansh: 'Romanche',
     },
     share: {
       title: 'Partager la liste de réapprovisionnement',
@@ -431,22 +339,340 @@ export const translations: Record<LanguageCode, Translations> = {
       dozen: 'douzaine',
     },
   },
+  de: {
+    nav: {
+      panel: 'Panel',
+      search: 'Produkte suchen',
+      info: 'Entwicklerinformationen',
+      share: 'Liste teilen',
+      language: 'Sprache',
+    },
+    form: {
+      productLabel: 'Produkt',
+      productPlaceholder: 'Z.B.: Hähnchenbrust, Tomaten...',
+      addButton: 'Hinzufügen',
+      quantityLabel: 'Menge',
+      unitLabel: 'Einheit',
+      categoryLabel: 'Kategorie (optional)',
+      quantitiesActive: 'Mengen aktiv',
+      onlyProducts: 'Nur Produkte',
+      toggleQuantitiesLabel: 'Mengenmodus umschalten',
+      enableQuantitiesTitle: 'Mengen aktivieren',
+      disableQuantitiesTitle: 'Mengen deaktivieren',
+      emptyProductError: 'Produktname darf nicht leer sein',
+      negativeQuantityError: 'Menge darf nicht negativ sein',
+      addProductError: 'Fehler beim Hinzufügen des Produkts',
+      quantityIncreasedMessage: 'Menge erhöht',
+      noUnitSelected: 'Nicht ausgewählt',
+    },
+    modal: {
+      addProduct: 'Produkt hinzufügen',
+      productName: 'Produktname',
+      quantity: 'Menge',
+      unit: 'Einheit',
+      category: 'Kategorie (optional)',
+      add: 'Hinzufügen',
+      cancel: 'Abbrechen',
+    },
+    languageModal: {
+      title: 'Sprache',
+      selectLanguagePrompt: 'Wählen Sie die Sprache für die Nachbestellungsliste',
+      spanish: 'Spanisch',
+      english: 'Englisch',
+      french: 'Französisch',
+      german: 'Deutsch',
+      italian: 'Italienisch',
+      romansh: 'Rätoromanisch',
+    },
+    share: {
+      title: 'Nachbestellungsliste teilen',
+      copy: 'Link kopieren',
+      copied: 'Gekürzter Link kopiert!',
+      empty: 'Liste ist leer, fügen Sie Produkte hinzu zum Teilen',
+      error: 'Fehler beim Generieren des Links',
+    },
+    pdf: {
+      title: 'PDF herunterladen',
+      downloadButton: '📥 PDF herunterladen',
+      spanish: 'Spanisch',
+      french: 'Französisch',
+      english: 'Englisch',
+      restockingListTitle: 'Nachbestellungsliste',
+    },
+    credits: {
+      title: 'Erstellt von',
+      createdBy: 'Erik Valencia Cardona',
+      madeWith: 'Mit ❤️ für Restaurants gemacht',
+    },
+    search: {
+      placeholder: 'Produkte suchen...',
+      noResults: 'Keine Produkte gefunden',
+    },
+    print: {
+      noProducts: 'Keine Produkte in der Liste',
+      autoDownloadMessage: 'Die Datei wird automatisch heruntergeladen',
+    },
+    ui: {
+      categories: 'Kategorien',
+      allCategories: 'Alle Kategorien',
+      addFirstProduct: 'Fügen Sie Ihr erstes Produkt hinzu',
+      clearList: 'Liste löschen',
+      deleteConfirm: 'Sind Sie sicher?',
+      deleteItem: 'Löschen',
+      restockingList: 'Nachbestellungsliste - Chef',
+      quantity: 'Menge',
+      unit: 'Einheit',
+      remove: 'Löschen',
+      export: 'Exportieren',
+      import: 'Importieren',
+      language: 'Deutsch',
+      yes: 'Ja',
+      no: 'Nein',
+      cancel: 'Abbrechen',
+    },
+    units: {
+      kg: 'kg',
+      g: 'g',
+      L: 'L',
+      ml: 'ml',
+      unit: 'Stück',
+      box: 'Karton',
+      package: 'Paket',
+      jar: 'Glas',
+      can: 'Dose',
+      dozen: 'Dutzend',
+    },
+  },
+  it: {
+    nav: {
+      panel: 'Pannello',
+      search: 'Cerca prodotti',
+      info: 'Informazioni sviluppatore',
+      share: 'Condividi lista',
+      language: 'Lingua',
+    },
+    form: {
+      productLabel: 'Prodotto',
+      productPlaceholder: 'Es: petto di pollo, pomodori...',
+      addButton: 'Aggiungi',
+      quantityLabel: 'Quantità',
+      unitLabel: 'Unità',
+      categoryLabel: 'Categoria (opzionale)',
+      quantitiesActive: 'Quantità attive',
+      onlyProducts: 'Solo prodotti',
+      toggleQuantitiesLabel: 'Attiva/disattiva modalità quantità',
+      enableQuantitiesTitle: 'Attiva quantità',
+      disableQuantitiesTitle: 'Disattiva quantità',
+      emptyProductError: 'Il nome del prodotto non può essere vuoto',
+      negativeQuantityError: 'La quantità non può essere negativa',
+      addProductError: 'Errore nell\'aggiunta del prodotto',
+      quantityIncreasedMessage: 'Quantità aumentata',
+      noUnitSelected: 'Non selezionato',
+    },
+    modal: {
+      addProduct: 'Aggiungi prodotto',
+      productName: 'Nome prodotto',
+      quantity: 'Quantità',
+      unit: 'Unità',
+      category: 'Categoria (opzionale)',
+      add: 'Aggiungi',
+      cancel: 'Annulla',
+    },
+    languageModal: {
+      title: 'Lingua',
+      selectLanguagePrompt: 'Seleziona la lingua per la lista di rifornimento',
+      spanish: 'Spagnolo',
+      english: 'Inglese',
+      french: 'Francese',
+      german: 'Tedesco',
+      italian: 'Italiano',
+      romansh: 'Romancio',
+    },
+    share: {
+      title: 'Condividi lista di rifornimento',
+      copy: 'Copia link',
+      copied: 'Link abbreviato copiato!',
+      empty: 'La lista è vuota, aggiungi prodotti per condividere',
+      error: 'Errore nella generazione del link',
+    },
+    pdf: {
+      title: 'Scarica PDF',
+      downloadButton: '📥 Scarica PDF',
+      spanish: 'Spagnolo',
+      french: 'Francese',
+      english: 'Inglese',
+      restockingListTitle: 'Lista di rifornimento',
+    },
+    credits: {
+      title: 'Creato da',
+      createdBy: 'Erik Valencia Cardona',
+      madeWith: 'Fatto con ❤️ per i ristoranti',
+    },
+    search: {
+      placeholder: 'Cerca prodotti...',
+      noResults: 'Nessun prodotto trovato',
+    },
+    print: {
+      noProducts: 'Nessun prodotto nella lista',
+      autoDownloadMessage: 'Il file verrà scaricato automaticamente',
+    },
+    ui: {
+      categories: 'Categorie',
+      allCategories: 'Tutte le categorie',
+      addFirstProduct: 'Aggiungi il tuo primo prodotto',
+      clearList: 'Cancella lista',
+      deleteConfirm: 'Sei sicuro?',
+      deleteItem: 'Elimina',
+      restockingList: 'Lista di rifornimento - Chef',
+      quantity: 'Quantità',
+      unit: 'Unità',
+      remove: 'Elimina',
+      export: 'Esporta',
+      import: 'Importa',
+      language: 'Italiano',
+      yes: 'Sì',
+      no: 'No',
+      cancel: 'Annulla',
+    },
+    units: {
+      kg: 'kg',
+      g: 'g',
+      L: 'L',
+      ml: 'ml',
+      unit: 'unità',
+      box: 'scatola',
+      package: 'pacco',
+      jar: 'barattolo',
+      can: 'lattina',
+      dozen: 'dozzina',
+    },
+  },
+  roh: {
+    nav: {
+      panel: 'Panel',
+      search: 'Tschertgar products',
+      info: 'Infurmaziun davart il sviluppader',
+      share: 'Cundivider glista',
+      language: 'Linguatg',
+    },
+    form: {
+      productLabel: 'Product',
+      productPlaceholder: 'P.ex.: petg da giaglina, tomatas...',
+      addButton: 'Agiuntar',
+      quantityLabel: 'Quantitad',
+      unitLabel: 'Unitad',
+      categoryLabel: 'Categoria (opziunal)',
+      quantitiesActive: 'Quantitads activas',
+      onlyProducts: 'Be products',
+      toggleQuantitiesLabel: 'Midar il modus da quantitads',
+      enableQuantitiesTitle: 'Activar quantitads',
+      disableQuantitiesTitle: 'Desactivar quantitads',
+      emptyProductError: 'Il num dal product na po betg esser vid',
+      negativeQuantityError: 'La quantitad na po betg esser negativa',
+      addProductError: 'Errur cun agiuntar il product',
+      quantityIncreasedMessage: 'Quantitad augmentada',
+      noUnitSelected: 'Betg tschernì',
+    },
+    modal: {
+      addProduct: 'Agiuntar product',
+      productName: 'Num dal product',
+      quantity: 'Quantitad',
+      unit: 'Unitad',
+      category: 'Categoria (opziunal)',
+      add: 'Agiuntar',
+      cancel: 'Interrumper',
+    },
+    languageModal: {
+      title: 'Linguatg',
+      selectLanguagePrompt: 'Tscherner il linguatg per la glista da reapprovisiunament',
+      spanish: 'Spagnol',
+      english: 'Englais',
+      french: 'Franzos',
+      german: 'Tudestg',
+      italian: 'Talian',
+      romansh: 'Rumantsch',
+    },
+    share: {
+      title: 'Cundivider glista da reapprovisiunament',
+      copy: 'Copiar link',
+      copied: 'Link scursanì copià!',
+      empty: 'La glista è vida, agiuntar products per cundivider',
+      error: 'Errur cun generar il link',
+    },
+    pdf: {
+      title: 'Telechargiar PDF',
+      downloadButton: '📥 Telechargiar PDF',
+      spanish: 'Spagnol',
+      french: 'Franzos',
+      english: 'Englais',
+      restockingListTitle: 'Glista da reapprovisiunament',
+    },
+    credits: {
+      title: 'Creà da',
+      createdBy: 'Erik Valencia Cardona',
+      madeWith: 'Fatg cun ❤️ per ristoraunts',
+    },
+    search: {
+      placeholder: 'Tschertgar products...',
+      noResults: 'Nagins products chattads',
+    },
+    print: {
+      noProducts: 'Nagins products en la glista',
+      autoDownloadMessage: 'La datoteca vegn telechargiada automaticamain',
+    },
+    ui: {
+      categories: 'Categorias',
+      allCategories: 'Tut las categorias',
+      addFirstProduct: 'Agiuntar tes emprim product',
+      clearList: 'Stizzar glista',
+      deleteConfirm: 'Essas ti segir?',
+      deleteItem: 'Stizzar',
+      restockingList: 'Glista da reapprovisiunament - Chef',
+      quantity: 'Quantitad',
+      unit: 'Unitad',
+      remove: 'Stizzar',
+      export: 'Exportar',
+      import: 'Importar',
+      language: 'Rumantsch',
+      yes: 'Gia',
+      no: 'Na',
+      cancel: 'Interrumper',
+    },
+    units: {
+      kg: 'kg',
+      g: 'g',
+      L: 'L',
+      ml: 'ml',
+      unit: 'unitad',
+      box: 'chaschetta',
+      package: 'pachet',
+      jar: 'teglia',
+      can: 'scatulettas',
+      dozen: 'dutschina',
+    },
+  },
 }
 
 /**
  * Detecta el idioma del navegador y retorna el más cercano soportado
+ * Fallback seguro: inglés (en)
+ * Idiomas soportados: francés (fr), alemán (de), italiano (it), romanche (roh), inglés (en)
  */
 export function detectBrowserLanguage(): LanguageCode {
   const browserLang = navigator.language.split('-')[0].toLowerCase()
   
-  // Mapear idiomas comunes a los soportados
+  // Mapear idiomas del navegador a códigos soportados
   const langMap: Record<string, LanguageCode> = {
-    es: 'es',
     en: 'en',
     fr: 'fr',
+    de: 'de',
+    it: 'it',
+    rm: 'roh', // Código ISO 639-1 para romanche
+    roh: 'roh', // También aceptar el código ISO 639-3
   }
   
-  return langMap[browserLang] || 'es' // Default a español
+  // Si el idioma está soportado, usarlo; sino, fallback a inglés
+  return langMap[browserLang] || 'en'
 }
 
 /**
