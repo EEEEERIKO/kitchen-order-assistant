@@ -5,10 +5,10 @@ import { RESTAURANT_CONFIG } from '../config/restaurant'
 
 interface PDFGeneratorProps {
   items: ListItem[]
-  language: 'es' | 'fr'
+  language: 'es' | 'fr' | 'en'
 }
 
-function generatePDFHTML(items: ListItem[], language: 'es' | 'fr', lastAddedProductId?: string, enableQuantityMode: boolean = false): { html: string; filename: string } {
+function generatePDFHTML(items: ListItem[], language: 'es' | 'fr' | 'en', lastAddedProductId?: string, enableQuantityMode: boolean = false): { html: string; filename: string } {
   const groupedAndOrdered = getGroupedAndOrderedProducts(items, lastAddedProductId)
   const allCategories = getAllCategories()
   const categoryMap = new Map(allCategories.map((cat) => [cat.id, cat]))
