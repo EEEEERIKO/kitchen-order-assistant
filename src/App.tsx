@@ -7,6 +7,7 @@ import { LanguageModal } from './components/LanguageModal'
 import { LanguageSwitcher } from './components/LanguageSwitcher'
 import { generatePDF } from './components/PDFGenerator'
 import { useLanguage } from './app/i18n/LanguageProvider'
+import { getCategoryName, getDateLocale } from './app/i18n/translations'
 import { useRestockingList, encodeListForSharing, decodeListFromShare } from './components/useRestockingList'
 import { classifyProduct } from './app/domain/classification'
 import { RESTAURANT_CONFIG } from './config/restaurant'
@@ -15,7 +16,7 @@ import { getGroupedAndOrderedProducts } from './components/grouping'
 import type { Unit } from './app/domain/types'
 
 function App() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [showLanguageModal, setShowLanguageModal] = useState(false)
   const [lastAddedCategory, setLastAddedCategory] = useState<string | null>(null)
   const [lastAddedProductId, setLastAddedProductId] = useState<string | null>(null)
@@ -319,10 +320,10 @@ function App() {
             <div className="flex items-center space-x-4 sm:space-x-8">
               <a className="flex items-center space-x-3 group" href="#">
                 <MdRestaurant className="text-3xl sm:text-4xl text-primary dark:text-white group-hover:scale-110 transition-transform" />
-                <span className="font-display font-bold text-2xl sm:text-3xl text-primary dark:text-white group-hover:opacity-80 transition-opacity hidden sm:inline">Chef Inventario</span>
+                <span className="font-display font-bold text-2xl sm:text-3xl text-primary dark:text-white group-hover:opacity-80 transition-opacity hidden sm:inline">{t.nav.appTitle}</span>
               </a>
               <div className="hidden md:flex space-x-8 pl-8 border-l border-gray-200 dark:border-gray-700 ml-4 h-8 items-center">
-                <a className="text-primary dark:text-white font-medium hover:opacity-70 transition-opacity border-b-2 border-primary dark:border-white" href="#">Panel</a>
+                <a className="text-primary dark:text-white font-medium hover:opacity-70 transition-opacity border-b-2 border-primary dark:border-white" href="#">{t.nav.panel}</a>
               </div>
             </div>
             <div className="flex items-center space-x-1 sm:space-x-2">
@@ -339,10 +340,15 @@ function App() {
               <button 
                 onClick={() => searchInputRef.current?.focus()}
                 className="p-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white transition-colors"
-                title="Buscar productos"
+                title={t.nav.search}
               >
                 <span className="material-symbols-outlined font-light">search</span>
               </button>
+              
+              {/* Language Switcher */}
+              <div className="hidden sm:block">
+                <LanguageSwitcher />
+              </div>
               
               {/* Credits button */}
               <div className="relative" data-credits-container>
@@ -352,7 +358,7 @@ function App() {
                     setShowCredits(!showCredits)
                   }}
                   className="p-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white transition-colors relative"
-                  title="Información del desarrollador"
+                  title={t.nav.info}
                 >
                   <span className="material-symbols-outlined font-light">info</span>
                 </button>
@@ -363,9 +369,9 @@ function App() {
                     className="absolute right-0 mt-2 w-80 bg-white dark:bg-surface-dark rounded-lg shadow-lg border border-border-light dark:border-border-dark p-6 z-50"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <h3 className="font-display text-lg font-bold text-primary dark:text-white mb-3">Creado Por</h3>
+                    <h3 className="font-display text-lg font-bold text-primary dark:text-white mb-3">{t.credits.title}</h3>
                     <p className="text-gray-700 dark:text-gray-300 mb-4">
-                      <span className="font-semibold">Erik Valencia Cardona</span>
+                      <span className="font-semibold">{t.credits.createdBy}</span>
                     </p>
                     <div className="flex gap-4">
                       <a 
@@ -395,10 +401,10 @@ function App() {
               <button 
                 onClick={handleShareList}
                 className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white transition-colors ml-1 sm:ml-2 rounded-md hover:bg-gray-100 dark:hover:bg-surface-dark"
-                title="Compartir lista"
+                title={t.nav.shareList}
               >
                 <span className="material-symbols-outlined text-lg font-light">share</span>
-                <span className="text-xs sm:text-sm font-medium hidden sm:inline">Compartir Lista</span>
+                <span className="text-xs sm:text-sm font-medium hidden sm:inline">{t.nav.shareList}</span>
               </button>
 
               {/* Share message toast */}
@@ -429,11 +435,11 @@ function App() {
               <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
                 <span className="material-symbols-outlined text-red-600 dark:text-red-400">warning</span>
               </div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">¿Limpiar lista?</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t.ui.deleteConfirm}</h2>
             </div>
             
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              ¿Estás seguro de que deseas eliminar todos los {items.length} productos de la lista? Esta acción no se puede deshacer.
+              {t.ui.deleteConfirmMessage.replace('{count}', items.length.toString())}
             </p>
             
             <div className="flex gap-3">
@@ -441,7 +447,7 @@ function App() {
                 onClick={() => setShowClearConfirmModal(false)}
                 className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
-                Cancelar
+                {t.ui.cancel}
               </button>
               <button
                 onClick={() => {
@@ -450,7 +456,7 @@ function App() {
                 }}
                 className="flex-1 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors"
               >
-                Limpiar Todo
+                {t.ui.clearAll}
               </button>
             </div>
           </div>
@@ -465,11 +471,11 @@ function App() {
               <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
                 <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">info</span>
               </div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Unidades incompletas</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t.ui.incompleteUnits}</h2>
             </div>
             
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Los siguientes productos no tienen unidad configurada:
+              {t.ui.incompleteUnitsMessage}
             </p>
             
             <div className="bg-amber-50 dark:bg-amber-900/10 rounded-lg p-3 mb-6 max-h-48 overflow-y-auto border border-amber-200 dark:border-amber-800">
@@ -487,7 +493,7 @@ function App() {
               onClick={scrollToFirstIncompleteProduct}
               className="w-full px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-medium transition-colors"
             >
-              Entendido, voy a completar
+              {t.ui.understood}
             </button>
           </div>
         </div>
@@ -502,7 +508,7 @@ function App() {
           >
             <div className="p-4 space-y-6">
               <div>
-                <h2 className="font-display text-lg font-bold mb-3 text-primary dark:text-white">Categorías</h2>
+                <h2 className="font-display text-lg font-bold mb-3 text-primary dark:text-white">{t.ui.categories}</h2>
                 <nav className="space-y-1">
                   <button 
                     onClick={() => {
@@ -515,7 +521,7 @@ function App() {
                         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white'
                     }`}
                   >
-                    <span>Todos / Tous</span>
+                    <span>{t.ui.allCategories}</span>
                     <span className={`${selectedCategory === 'all' ? 'bg-primary/10 dark:bg-white/20 text-primary dark:text-white' : 'bg-gray-100 dark:bg-gray-700/50 text-gray-400'} py-0.5 px-2 rounded-full text-xs transition-colors`}>{itemCount}</span>
                   </button>
                   {Object.values(CATEGORIES).map(cat => (
@@ -531,7 +537,7 @@ function App() {
                           : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white'
                       }`}
                     >
-                      <span>{cat.nameEs}</span>
+                      <span>{getCategoryName(cat.id, language)}</span>
                       <span className={`${selectedCategory === cat.id ? 'bg-primary/10 dark:bg-white/20 text-primary dark:text-white' : 'bg-gray-100 dark:bg-gray-700/50 text-gray-400'} py-0.5 px-2 rounded-full text-xs transition-colors`}>
                         {categoriesWithCounts[cat.id] || 0}
                       </span>
@@ -551,7 +557,7 @@ function App() {
           <div className="sticky top-24 max-h-[calc(100vh-120px-120px)] overflow-y-auto space-y-8">
             {/* Categories */}
             <div>
-              <h2 className="font-display text-xl font-bold mb-4 text-primary dark:text-white">Categorías</h2>
+              <h2 className="font-display text-xl font-bold mb-4 text-primary dark:text-white">{t.ui.categories}</h2>
               <nav className="space-y-1">
                 <button 
                   onClick={() => handleCategoryClick('all')}
@@ -561,7 +567,7 @@ function App() {
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white'
                   }`}
                 >
-                  <span>Todos / Tous</span>
+                  <span>{t.ui.allCategories}</span>
                   <span className={`${selectedCategory === 'all' ? 'bg-primary/10 dark:bg-white/20 text-primary dark:text-white' : 'bg-gray-100 dark:bg-gray-700/50 text-gray-400'} py-0.5 px-2 rounded-full text-xs transition-colors`}>{itemCount}</span>
                 </button>
                 {Object.values(CATEGORIES).map(cat => (
@@ -574,7 +580,7 @@ function App() {
                         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white'
                     }`}
                   >
-                    <span>{cat.nameEs}</span>
+                    <span>{getCategoryName(cat.id, language)}</span>
                     <span className={`${selectedCategory === cat.id ? 'bg-primary/10 dark:bg-white/20 text-primary dark:text-white' : 'bg-gray-100 dark:bg-gray-700/50 text-gray-400'} py-0.5 px-2 rounded-full text-xs transition-colors`}>
                       {categoriesWithCounts[cat.id] || 0}
                     </span>
@@ -585,14 +591,14 @@ function App() {
 
             {/* Quick Add - Search */}
             <div className="bg-surface-light dark:bg-surface-dark p-4 rounded-lg border border-border-light dark:border-border-dark shadow-sm">
-              <h3 className="font-display font-bold text-lg mb-3 text-primary dark:text-white">Búsqueda Rápida</h3>
+              <h3 className="font-display font-bold text-lg mb-3 text-primary dark:text-white">{t.nav.quickSearch}</h3>
               <div className="flex flex-col gap-3">
                 <input 
                   ref={searchInputRef}
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Buscar productos..."
+                  placeholder={t.search.placeholder}
                   className="block w-full text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-primary focus:border-primary dark:bg-background-dark dark:text-white py-2 px-3"
                 />
               </div>
@@ -645,8 +651,8 @@ function App() {
 
               {/* Fecha */}
               <div className="text-right">
-                <span className="text-xs text-gray-400 uppercase tracking-wider block">Fecha</span>
-                <div className="text-sm font-medium dark:text-white">{new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+                <span className="text-xs text-gray-400 uppercase tracking-wider block">{t.ui.date}</span>
+                <div className="text-sm font-medium dark:text-white">{new Date().toLocaleDateString(getDateLocale(language), { year: 'numeric', month: 'short', day: 'numeric' })}</div>
               </div>
             </div>
           </div>
@@ -665,14 +671,14 @@ function App() {
           {filteredItems.length > 0 && (
             <div className="flex items-center justify-between pt-2">
               <h2 className="font-display text-2xl font-bold text-primary dark:text-white">
-                Lista Actual <span className="text-lg font-normal text-gray-400 ml-2">({filteredItems.length} productos)</span>
+                {t.ui.currentList} <span className="text-lg font-normal text-gray-400 ml-2">({filteredItems.length} {t.ui.products})</span>
               </h2>
               <button 
                 onClick={() => setShowClearConfirmModal(true)}
                 className="text-xs font-medium text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors uppercase tracking-wider flex items-center gap-1"
               >
                 <span className="material-symbols-outlined text-sm">delete_sweep</span>
-                Limpiar Todo
+                {t.ui.clearAll}
               </button>
             </div>
           )}
@@ -697,10 +703,10 @@ function App() {
             <div className="bg-surface-light dark:bg-surface-dark p-12 rounded-lg border border-border-light dark:border-border-dark text-center">
               <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mx-auto block mb-4">inbox</span>
               <p className="text-text-secondary-light dark:text-text-secondary-dark text-lg">
-                {searchQuery ? 'No se encontraron productos' : 'No hay productos aún'}
+                {searchQuery ? t.ui.noProductsFound : t.ui.noProductsYet}
               </p>
               <p className="text-text-secondary-light dark:text-text-secondary-dark text-sm mt-2">
-                {searchQuery ? 'Intenta con otros términos de búsqueda' : 'Comienza agregando productos a tu lista'}
+                {searchQuery ? t.ui.tryOtherTerms : t.ui.startAddingProducts}
               </p>
             </div>
           )}
@@ -729,8 +735,8 @@ function App() {
               className="w-full sm:w-auto bg-success-green hover:bg-[#244a44] text-white font-medium py-3 px-6 sm:px-8 rounded shadow-md transition-colors flex items-center justify-center space-x-2 sm:space-x-3 uppercase tracking-wide text-xs sm:text-sm"
             >
               <span className="material-symbols-outlined text-lg sm:text-xl">print</span>
-              <span className="hidden sm:inline">Descargar Lista de Reposición</span>
-              <span className="sm:hidden">Descargar PDF</span>
+              <span className="hidden sm:inline">{t.pdf.downloadButton}</span>
+              <span className="sm:hidden">{t.pdf.downloadPDF}</span>
             </button>
           </div>
         </div>
@@ -742,12 +748,12 @@ function App() {
           <div className="flex items-center space-x-2 mb-4 md:mb-0">
             <span className="font-display font-bold text-base text-primary dark:text-white tracking-widest">LE RENDEZ-VOUS</span>
             <span className="mx-2 text-gray-300">|</span>
-            <span>© 2026 Aplicación de Gestión Culinaria</span>
+            <span>{t.footer.copyright}</span>
           </div>
           <div className="flex space-x-6">
-            <a className="hover:text-primary dark:hover:text-white transition-colors" href="#">Privacidad</a>
-            <a className="hover:text-primary dark:hover:text-white transition-colors" href="#">Términos</a>
-            <a className="hover:text-primary dark:hover:text-white transition-colors" href="#">Soporte</a>
+            <a className="hover:text-primary dark:hover:text-white transition-colors" href="#">{t.footer.privacy}</a>
+            <a className="hover:text-primary dark:hover:text-white transition-colors" href="#">{t.footer.terms}</a>
+            <a className="hover:text-primary dark:hover:text-white transition-colors" href="#">{t.footer.support}</a>
           </div>
         </div>
       </footer>
@@ -764,11 +770,11 @@ function App() {
           >
             <div className="flex items-center gap-3 mb-4">
               <span className="material-symbols-outlined text-primary text-2xl">share</span>
-              <h3 className="text-lg font-bold text-primary dark:text-white">Compartir Lista</h3>
+              <h3 className="text-lg font-bold text-primary dark:text-white">{t.share.title}</h3>
             </div>
             
             <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
-              Copia este enlace y comparte con otros para que puedan ver tu lista:
+              {t.share.copy}
             </p>
 
             {/* URL Display Box */}
@@ -795,8 +801,8 @@ function App() {
                 className="flex-1 flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-primary hover:bg-primary/90 text-white rounded font-medium transition-colors text-sm"
               >
                 <span className="material-symbols-outlined text-lg">content_copy</span>
-                <span className="hidden sm:inline">Copiar</span>
-                <span className="sm:hidden">Copiar Enlace</span>
+                <span className="hidden sm:inline">{t.share.copy}</span>
+                <span className="sm:hidden">{t.share.copy}</span>
               </button>
               <button
                 onClick={() => {
@@ -807,13 +813,13 @@ function App() {
                 className="flex-1 sm:flex-none px-4 py-3 sm:py-2 bg-blue-500 hover:bg-blue-600 text-white rounded font-medium transition-colors flex items-center justify-center gap-2 text-sm"
               >
                 <span className="material-symbols-outlined text-lg">open_in_new</span>
-                <span className="hidden sm:inline">Abrir</span>
+                <span className="hidden sm:inline">{t.share.openLink}</span>
               </button>
               <button
                 onClick={() => setShowShareModal(false)}
                 className="flex-1 sm:flex-none px-4 py-3 sm:py-2 bg-gray-200 dark:bg-surface-dark hover:bg-gray-300 dark:hover:bg-background-dark text-gray-700 dark:text-gray-300 rounded font-medium transition-colors text-sm"
               >
-                Cerrar
+                {t.ui.cancel}
               </button>
             </div>
 
@@ -873,7 +879,7 @@ function CategoryGridAll({
 }
 
 function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpdateQuantity, enableQuantityMode, isHighlighted, highlightedProductId, incompleteProductRefsMap }: any) {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const colorMap: Record<string, string> = {
     'carnes': 'bg-primary',
     'pescados': 'bg-blue-500',
@@ -896,8 +902,7 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
       <div className="bg-gray-50 dark:bg-[#252525] border-b border-gray-200 dark:border-gray-700 px-5 py-3 flex items-center justify-between">
         <div className="flex items-center">
           <div className={`w-2 h-2 rounded-full ${dotColor} mr-3`}></div>
-          <span className="font-bold text-gray-900 dark:text-white mr-3 text-sm uppercase tracking-wide">{category.nameEs}</span>
-          <span className="text-gray-400 italic text-xs font-serif">{category.nameFr}</span>
+          <span className="font-bold text-gray-900 dark:text-white mr-3 text-sm uppercase tracking-wide">{getCategoryName(categoryId, language)}</span>
         </div>
         <span className="text-xs font-medium text-gray-400 bg-white dark:bg-white/10 px-2 py-0.5 rounded border border-gray-200 dark:border-gray-600">
           {items.length} items

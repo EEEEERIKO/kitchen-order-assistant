@@ -11,7 +11,10 @@ export interface Translations {
     search: string
     info: string
     share: string
+    shareList: string
     language: string
+    appTitle: string
+    quickSearch: string
   }
 
   // Product Form
@@ -60,16 +63,20 @@ export interface Translations {
   // Share functionality
   share: {
     title: string
+    shareList: string
     copy: string
     copied: string
     empty: string
     error: string
+    shortLink: string
+    openLink: string
   }
 
   // PDF export
   pdf: {
     title: string
     downloadButton: string
+    downloadPDF: string
     spanish: string
     french: string
     english: string
@@ -81,6 +88,15 @@ export interface Translations {
     title: string
     createdBy: string
     madeWith: string
+  }
+
+  // Footer
+  footer: {
+    appName: string
+    copyright: string
+    privacy: string
+    terms: string
+    support: string
   }
 
   // Search
@@ -101,9 +117,13 @@ export interface Translations {
     allCategories: string
     addFirstProduct: string
     clearList: string
+    clearAll: string
     deleteConfirm: string
+    deleteConfirmMessage: string
     deleteItem: string
     restockingList: string
+    currentList: string
+    products: string
     quantity: string
     unit: string
     remove: string
@@ -113,6 +133,28 @@ export interface Translations {
     yes: string
     no: string
     cancel: string
+    date: string
+    noProducts: string
+    noProductsYet: string
+    noProductsFound: string
+    tryOtherTerms: string
+    startAddingProducts: string
+    incompleteUnits: string
+    incompleteUnitsMessage: string
+    understood: string
+  }
+
+  // Categories
+  categoryNames: {
+    carnes: string
+    pescados: string
+    verduras: string
+    frutas: string
+    lacteos: string
+    secos: string
+    condimentos: string
+    aceites: string
+    otros: string
   }
 
   // Units
@@ -137,7 +179,10 @@ export const translations: Record<LanguageCode, Translations> = {
       search: 'Search products',
       info: 'Developer Information',
       share: 'Share List',
+      shareList: 'Share List',
       language: 'Language',
+      appTitle: 'Chef Inventory',
+      quickSearch: 'Quick Search',
     },
     form: {
       productLabel: 'Product',
@@ -178,14 +223,18 @@ export const translations: Record<LanguageCode, Translations> = {
     },
     share: {
       title: 'Share Restocking List',
+      shareList: 'Share List',
       copy: 'Copy link',
       copied: 'Shortened link copied!',
       empty: 'List is empty, add products to share',
       error: 'Error generating link',
+      shortLink: 'Shortened link',
+      openLink: 'Open link',
     },
     pdf: {
       title: 'Download PDF',
-      downloadButton: '📥 Download PDF',
+      downloadButton: 'Download PDF',
+      downloadPDF: 'Download PDF',
       spanish: 'Spanish',
       french: 'French',
       english: 'English',
@@ -195,6 +244,13 @@ export const translations: Record<LanguageCode, Translations> = {
       title: 'Created By',
       createdBy: 'Erik Valencia Cardona',
       madeWith: 'Made with ❤️ for restaurants',
+    },
+    footer: {
+      appName: 'Culinary Management Application',
+      copyright: '© 2026 Culinary Management Application',
+      privacy: 'Privacy',
+      terms: 'Terms',
+      support: 'Support',
     },
     search: {
       placeholder: 'Search products...',
@@ -209,9 +265,13 @@ export const translations: Record<LanguageCode, Translations> = {
       allCategories: 'All categories',
       addFirstProduct: 'Add your first product',
       clearList: 'Clear list',
+      clearAll: 'Clear All',
       deleteConfirm: 'Are you sure?',
+      deleteConfirmMessage: 'Are you sure you want to delete all {count} products from the list? This action cannot be undone.',
       deleteItem: 'Delete',
       restockingList: 'Restocking List - Chef',
+      currentList: 'Current List',
+      products: 'products',
       quantity: 'Quantity',
       unit: 'Unit',
       remove: 'Delete',
@@ -221,6 +281,26 @@ export const translations: Record<LanguageCode, Translations> = {
       yes: 'Yes',
       no: 'No',
       cancel: 'Cancel',
+      date: 'Date',
+      noProducts: 'No products',
+      noProductsYet: 'No products yet',
+      noProductsFound: 'No products found',
+      tryOtherTerms: 'Try other search terms',
+      startAddingProducts: 'Start adding products to your list',
+      incompleteUnits: 'Incomplete units',
+      incompleteUnitsMessage: 'The following products do not have a unit configured:',
+      understood: 'Understood, I will complete',
+    },
+    categoryNames: {
+      carnes: 'Meat',
+      pescados: 'Fish and Seafood',
+      verduras: 'Vegetables',
+      frutas: 'Fruits',
+      lacteos: 'Dairy Products',
+      secos: 'Dry Products',
+      condimentos: 'Spices and Condiments',
+      aceites: 'Oils and Fats',
+      otros: 'Others',
     },
     units: {
       kg: 'kg',
@@ -241,7 +321,10 @@ export const translations: Record<LanguageCode, Translations> = {
       search: 'Rechercher des produits',
       info: 'Information du développeur',
       share: 'Partager la liste',
+      shareList: 'Partager la liste',
       language: 'Langue',
+      appTitle: 'Inventaire Chef',
+      quickSearch: 'Recherche Rapide',
     },
     form: {
       productLabel: 'Produit',
@@ -282,14 +365,18 @@ export const translations: Record<LanguageCode, Translations> = {
     },
     share: {
       title: 'Partager la liste de réapprovisionnement',
+      shareList: 'Partager la liste',
       copy: 'Copier le lien',
       copied: 'Lien raccourci copié!',
       empty: 'La liste est vide, ajoutez des produits à partager',
       error: 'Erreur lors de la génération du lien',
+      shortLink: 'Lien raccourci',
+      openLink: 'Ouvrir le lien',
     },
     pdf: {
       title: 'Télécharger PDF',
-      downloadButton: '📥 Télécharger PDF',
+      downloadButton: 'Télécharger PDF',
+      downloadPDF: 'Télécharger PDF',
       spanish: 'Espagnol',
       french: 'Français',
       english: 'Anglais',
@@ -299,6 +386,13 @@ export const translations: Record<LanguageCode, Translations> = {
       title: 'Créé par',
       createdBy: 'Erik Valencia Cardona',
       madeWith: 'Fait avec ❤️ pour les restaurants',
+    },
+    footer: {
+      appName: 'Application de Gestion Culinaire',
+      copyright: '© 2026 Application de Gestion Culinaire',
+      privacy: 'Confidentialité',
+      terms: 'Conditions',
+      support: 'Support',
     },
     search: {
       placeholder: 'Rechercher des produits...',
@@ -313,9 +407,13 @@ export const translations: Record<LanguageCode, Translations> = {
       allCategories: 'Toutes les catégories',
       addFirstProduct: 'Ajoutez votre premier produit',
       clearList: 'Effacer la liste',
+      clearAll: 'Tout effacer',
       deleteConfirm: 'Êtes-vous sûr?',
+      deleteConfirmMessage: 'Êtes-vous sûr de vouloir supprimer tous les {count} produits de la liste? Cette action ne peut pas être annulée.',
       deleteItem: 'Supprimer',
       restockingList: 'Liste de réapprovisionnement - Chef',
+      currentList: 'Liste actuelle',
+      products: 'produits',
       quantity: 'Quantité',
       unit: 'Unité',
       remove: 'Supprimer',
@@ -325,6 +423,26 @@ export const translations: Record<LanguageCode, Translations> = {
       yes: 'Oui',
       no: 'Non',
       cancel: 'Annuler',
+      date: 'Date',
+      noProducts: 'Aucun produit',
+      noProductsYet: 'Pas encore de produits',
+      noProductsFound: 'Aucun produit trouvé',
+      tryOtherTerms: 'Essayez d\'autres termes de recherche',
+      startAddingProducts: 'Commencez à ajouter des produits à votre liste',
+      incompleteUnits: 'Unités incomplètes',
+      incompleteUnitsMessage: 'Les produits suivants n\'ont pas d\'unité configurée:',
+      understood: 'Compris, je vais compléter',
+    },
+    categoryNames: {
+      carnes: 'Viandes',
+      pescados: 'Poissons et Fruits de Mer',
+      verduras: 'Légumes',
+      frutas: 'Fruits',
+      lacteos: 'Produits Laitiers',
+      secos: 'Produits Secs',
+      condimentos: 'Épices et Condiments',
+      aceites: 'Huiles et Graisses',
+      otros: 'Autres',
     },
     units: {
       kg: 'kg',
@@ -345,7 +463,10 @@ export const translations: Record<LanguageCode, Translations> = {
       search: 'Produkte suchen',
       info: 'Entwicklerinformationen',
       share: 'Liste teilen',
+      shareList: 'Liste teilen',
       language: 'Sprache',
+      appTitle: 'Koch Inventar',
+      quickSearch: 'Schnellsuche',
     },
     form: {
       productLabel: 'Produkt',
@@ -386,14 +507,18 @@ export const translations: Record<LanguageCode, Translations> = {
     },
     share: {
       title: 'Nachbestellungsliste teilen',
+      shareList: 'Liste teilen',
       copy: 'Link kopieren',
       copied: 'Gekürzter Link kopiert!',
       empty: 'Liste ist leer, fügen Sie Produkte hinzu zum Teilen',
       error: 'Fehler beim Generieren des Links',
+      shortLink: 'Gekürzter Link',
+      openLink: 'Link öffnen',
     },
     pdf: {
       title: 'PDF herunterladen',
-      downloadButton: '📥 PDF herunterladen',
+      downloadButton: 'PDF herunterladen',
+      downloadPDF: 'PDF herunterladen',
       spanish: 'Spanisch',
       french: 'Französisch',
       english: 'Englisch',
@@ -403,6 +528,13 @@ export const translations: Record<LanguageCode, Translations> = {
       title: 'Erstellt von',
       createdBy: 'Erik Valencia Cardona',
       madeWith: 'Mit ❤️ für Restaurants gemacht',
+    },
+    footer: {
+      appName: 'Kulinarische Verwaltungsanwendung',
+      copyright: '© 2026 Kulinarische Verwaltungsanwendung',
+      privacy: 'Datenschutz',
+      terms: 'Bedingungen',
+      support: 'Unterstützung',
     },
     search: {
       placeholder: 'Produkte suchen...',
@@ -417,9 +549,13 @@ export const translations: Record<LanguageCode, Translations> = {
       allCategories: 'Alle Kategorien',
       addFirstProduct: 'Fügen Sie Ihr erstes Produkt hinzu',
       clearList: 'Liste löschen',
+      clearAll: 'Alles löschen',
       deleteConfirm: 'Sind Sie sicher?',
+      deleteConfirmMessage: 'Möchten Sie wirklich alle {count} Produkte aus der Liste löschen? Diese Aktion kann nicht rückgängig gemacht werden.',
       deleteItem: 'Löschen',
       restockingList: 'Nachbestellungsliste - Chef',
+      currentList: 'Aktuelle Liste',
+      products: 'Produkte',
       quantity: 'Menge',
       unit: 'Einheit',
       remove: 'Löschen',
@@ -429,6 +565,26 @@ export const translations: Record<LanguageCode, Translations> = {
       yes: 'Ja',
       no: 'Nein',
       cancel: 'Abbrechen',
+      date: 'Datum',
+      noProducts: 'Keine Produkte',
+      noProductsYet: 'Noch keine Produkte',
+      noProductsFound: 'Keine Produkte gefunden',
+      tryOtherTerms: 'Versuchen Sie andere Suchbegriffe',
+      startAddingProducts: 'Beginnen Sie, Produkte zu Ihrer Liste hinzuzufügen',
+      incompleteUnits: 'Unvollständige Einheiten',
+      incompleteUnitsMessage: 'Die folgenden Produkte haben keine konfigurierte Einheit:',
+      understood: 'Verstanden, ich werde vervollständigen',
+    },
+    categoryNames: {
+      carnes: 'Fleisch',
+      pescados: 'Fisch und Meeresfrüchte',
+      verduras: 'Gemüse',
+      frutas: 'Obst',
+      lacteos: 'Milchprodukte',
+      secos: 'Trockenwaren',
+      condimentos: 'Gewürze und Würzmittel',
+      aceites: 'Öle und Fette',
+      otros: 'Sonstiges',
     },
     units: {
       kg: 'kg',
@@ -449,7 +605,10 @@ export const translations: Record<LanguageCode, Translations> = {
       search: 'Cerca prodotti',
       info: 'Informazioni sviluppatore',
       share: 'Condividi lista',
+      shareList: 'Condividi lista',
       language: 'Lingua',
+      appTitle: 'Inventario Chef',
+      quickSearch: 'Ricerca Veloce',
     },
     form: {
       productLabel: 'Prodotto',
@@ -490,14 +649,18 @@ export const translations: Record<LanguageCode, Translations> = {
     },
     share: {
       title: 'Condividi lista di rifornimento',
+      shareList: 'Condividi lista',
       copy: 'Copia link',
       copied: 'Link abbreviato copiato!',
       empty: 'La lista è vuota, aggiungi prodotti per condividere',
       error: 'Errore nella generazione del link',
+      shortLink: 'Link abbreviato',
+      openLink: 'Apri link',
     },
     pdf: {
       title: 'Scarica PDF',
-      downloadButton: '📥 Scarica PDF',
+      downloadButton: 'Scarica PDF',
+      downloadPDF: 'Scarica PDF',
       spanish: 'Spagnolo',
       french: 'Francese',
       english: 'Inglese',
@@ -507,8 +670,13 @@ export const translations: Record<LanguageCode, Translations> = {
       title: 'Creato da',
       createdBy: 'Erik Valencia Cardona',
       madeWith: 'Fatto con ❤️ per i ristoranti',
-    },
-    search: {
+    },    footer: {
+      appName: 'Applicazione di Gestione Culinaria',
+      copyright: '© 2026 Applicazione di Gestione Culinaria',
+      privacy: 'Privacy',
+      terms: 'Termini',
+      support: 'Supporto',
+    },    search: {
       placeholder: 'Cerca prodotti...',
       noResults: 'Nessun prodotto trovato',
     },
@@ -521,9 +689,13 @@ export const translations: Record<LanguageCode, Translations> = {
       allCategories: 'Tutte le categorie',
       addFirstProduct: 'Aggiungi il tuo primo prodotto',
       clearList: 'Cancella lista',
+      clearAll: 'Cancella tutto',
       deleteConfirm: 'Sei sicuro?',
+      deleteConfirmMessage: 'Sei sicuro di voler eliminare tutti i {count} prodotti dalla lista? Questa azione non può essere annullata.',
       deleteItem: 'Elimina',
       restockingList: 'Lista di rifornimento - Chef',
+      currentList: 'Lista attuale',
+      products: 'prodotti',
       quantity: 'Quantità',
       unit: 'Unità',
       remove: 'Elimina',
@@ -533,6 +705,26 @@ export const translations: Record<LanguageCode, Translations> = {
       yes: 'Sì',
       no: 'No',
       cancel: 'Annulla',
+      date: 'Data',
+      noProducts: 'Nessun prodotto',
+      noProductsYet: 'Nessun prodotto ancora',
+      noProductsFound: 'Nessun prodotto trovato',
+      tryOtherTerms: 'Prova altri termini di ricerca',
+      startAddingProducts: 'Inizia ad aggiungere prodotti alla tua lista',
+      incompleteUnits: 'Unità incomplete',
+      incompleteUnitsMessage: 'I seguenti prodotti non hanno un\'unità configurata:',
+      understood: 'Capito, completerò',
+    },
+    categoryNames: {
+      carnes: 'Carne',
+      pescados: 'Pesce e Frutti di Mare',
+      verduras: 'Verdure',
+      frutas: 'Frutta',
+      lacteos: 'Latticini',
+      secos: 'Prodotti Secchi',
+      condimentos: 'Spezie e Condimenti',
+      aceites: 'Oli e Grassi',
+      otros: 'Altri',
     },
     units: {
       kg: 'kg',
@@ -553,7 +745,10 @@ export const translations: Record<LanguageCode, Translations> = {
       search: 'Tschertgar products',
       info: 'Infurmaziun davart il sviluppader',
       share: 'Cundivider glista',
+      shareList: 'Cundivider glista',
       language: 'Linguatg',
+      appTitle: 'Inventari Chef',
+      quickSearch: 'Tschertga Svelta',
     },
     form: {
       productLabel: 'Product',
@@ -594,14 +789,18 @@ export const translations: Record<LanguageCode, Translations> = {
     },
     share: {
       title: 'Cundivider glista da reapprovisiunament',
+      shareList: 'Cundivider glista',
       copy: 'Copiar link',
       copied: 'Link scursanì copià!',
       empty: 'La glista è vida, agiuntar products per cundivider',
       error: 'Errur cun generar il link',
+      shortLink: 'Link scursanì',
+      openLink: 'Avrir link',
     },
     pdf: {
       title: 'Telechargiar PDF',
-      downloadButton: '📥 Telechargiar PDF',
+      downloadButton: 'Telechargiar PDF',
+      downloadPDF: 'Telechargiar PDF',
       spanish: 'Spagnol',
       french: 'Franzos',
       english: 'Englais',
@@ -611,6 +810,13 @@ export const translations: Record<LanguageCode, Translations> = {
       title: 'Creà da',
       createdBy: 'Erik Valencia Cardona',
       madeWith: 'Fatg cun ❤️ per ristoraunts',
+    },
+    footer: {
+      appName: 'Applicaziun da Gestiun Culinara',
+      copyright: '© 2026 Applicaziun da Gestiun Culinara',
+      privacy: 'Proteziun da datas',
+      terms: 'Cundiziuns',
+      support: 'Support',
     },
     search: {
       placeholder: 'Tschertgar products...',
@@ -625,18 +831,42 @@ export const translations: Record<LanguageCode, Translations> = {
       allCategories: 'Tut las categorias',
       addFirstProduct: 'Agiuntar tes emprim product',
       clearList: 'Stizzar glista',
-      deleteConfirm: 'Essas ti segir?',
+      clearAll: 'Stizzar tut',
+      deleteConfirm: 'Èn Vus segirs?',
+      deleteConfirmMessage: 'Èn Vus segirs che Vus vulais stizzar tut ils {count} products da la glista? Questa acziun na po betg vegnir annullada.',
       deleteItem: 'Stizzar',
       restockingList: 'Glista da reapprovisiunament - Chef',
+      currentList: 'Glista actuala',
+      products: 'products',
       quantity: 'Quantitad',
       unit: 'Unitad',
       remove: 'Stizzar',
       export: 'Exportar',
       import: 'Importar',
       language: 'Rumantsch',
-      yes: 'Gia',
+      yes: 'Gea',
       no: 'Na',
       cancel: 'Interrumper',
+      date: 'Data',
+      noProducts: 'Nagins products',
+      noProductsYet: 'Anc nagins products',
+      noProductsFound: 'Nagins products chattads',
+      tryOtherTerms: 'Empruvai auters termins da tschertga',
+      startAddingProducts: 'Cumenzar ad agiuntar products a Vossa glista',
+      incompleteUnits: 'Unitads incumpletas',
+      incompleteUnitsMessage: 'Ils suandants products n\'han nagina unitad configurada:',
+      understood: 'Chapì, jau vegn a cumplettar',
+    },
+    categoryNames: {
+      carnes: 'Carn',
+      pescados: 'Pesch e Fretgs da Mar',
+      verduras: 'Verduras',
+      frutas: 'Fritgs',
+      lacteos: 'Products Lattiers',
+      secos: 'Products Sitgs',
+      condimentos: 'Spezias e Condiments',
+      aceites: 'Olis e Grassas',
+      otros: 'Auters',
     },
     units: {
       kg: 'kg',
@@ -680,4 +910,27 @@ export function detectBrowserLanguage(): LanguageCode {
  */
 export function getTranslations(language: LanguageCode): Translations {
   return translations[language]
+}
+
+/**
+ * Obtiene el nombre traducido de una categoría
+ */
+export function getCategoryName(categoryId: string, language: LanguageCode): string {
+  const t = translations[language]
+  const categoryKey = categoryId as keyof typeof t.categoryNames
+  return t.categoryNames[categoryKey] || categoryId
+}
+
+/**
+ * Obtiene el locale para formateo de fechas según el idioma
+ */
+export function getDateLocale(language: LanguageCode): string {
+  const localeMap: Record<LanguageCode, string> = {
+    en: 'en-US',
+    fr: 'fr-FR',
+    de: 'de-DE',
+    it: 'it-IT',
+    roh: 'rm-CH',
+  }
+  return localeMap[language]
 }
