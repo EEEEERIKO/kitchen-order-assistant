@@ -3,6 +3,7 @@ import { getGroupedAndOrderedProducts } from './grouping'
 import { getAllCategories } from '../app/domain/classification'
 import { RESTAURANT_CONFIG } from '../config/restaurant'
 import { getTranslations, type LanguageCode } from '../app/i18n/translations'
+import { getProductName } from '../app/domain/product-names'
 
 interface PDFGeneratorProps {
   items: ListItem[]
@@ -134,8 +135,8 @@ function generatePDFHTML(items: ListItem[], language: LanguageCode, lastAddedPro
         <div class="products-grid">`
 
     categoryItems.forEach((item: ListItem) => {
-      // Usar productNameEs para todos los idiomas por ahora
-      const productName = item.productNameEs
+      // Use controlled culinary translations based on selected language
+      const productName = getProductName(item, language)
       // Solo mostrar valores si enableQuantityMode está activo
       const quantityValue = enableQuantityMode && item.quantity && item.unit && item.unit !== 'unidad' ? item.quantity : ''
       const unitValue = enableQuantityMode && item.unit && item.unit !== 'unidad' ? item.unit : ''

@@ -116,6 +116,7 @@ export function classifyProduct(
     return {
       id: generateUUID(),
       productId: knownProduct.id,
+      productNameKey: knownProduct.nameKey, // Fase 1.3: Clave para traducciones controladas
       productNameEs: knownProduct.nameEs,
       categoryId: knownProduct.categoryId,
       categoryNameEs: category.nameEs,

@@ -1,7 +1,7 @@
 /**
- * Diccionario bilingüe (ES → FR)
+ * Diccionario bilingüe (ES → FR) + Sistema de traducciones controladas
  * Fuente única de verdad para traducción y clasificación
- * Basado en Fase 0 - Definición Funcional
+ * Fase 1.3: Claves semánticas en inglés para traducciones profesionales
  */
 
 import type { Category, Product, CategoryId, ProductId } from './types'
@@ -78,6 +78,7 @@ export const PRODUCTS: Record<string, Product> = {
   'pollo': {
     id: createProductId('pollo'),
     categoryId: CATEGORIES.carnes.id,
+    nameKey: 'chicken_whole',
     nameEs: 'Pollo entero',
     nameFr: 'Poulet entier',
     unit: 'kg',
@@ -85,6 +86,7 @@ export const PRODUCTS: Record<string, Product> = {
   'pecho-de-pollo': {
     id: createProductId('pecho-de-pollo'),
     categoryId: CATEGORIES.carnes.id,
+    nameKey: 'chicken_breast',
     nameEs: 'Pecho de pollo',
     nameFr: 'Poitrine de poulet',
     unit: 'kg',
@@ -92,6 +94,7 @@ export const PRODUCTS: Record<string, Product> = {
   'pechugas-de-pollo': {
     id: createProductId('pechugas-de-pollo'),
     categoryId: CATEGORIES.carnes.id,
+    nameKey: 'chicken_breast',
     nameEs: 'Pechugas de pollo',
     nameFr: 'Poitrines de poulet',
     unit: 'kg',

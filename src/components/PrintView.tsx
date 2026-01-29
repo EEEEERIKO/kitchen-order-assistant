@@ -2,6 +2,7 @@ import type { ListItem } from '../app/domain/types'
 import { groupProductsByCategory, getCategoriesInOrder } from './grouping'
 import { getAllCategories } from '../app/domain/classification'
 import { getTranslations, type LanguageCode } from '../app/i18n/translations'
+import { getProductName } from '../app/domain/product-names'
 import './PrintView.css'
 
 interface PrintViewProps {
@@ -150,7 +151,7 @@ export function PrintView({ items, language }: PrintViewProps) {
                     </thead>
                     <tbody>
                       {categoryItems.map((item, index) => {
-                        const productName = item.productNameEs
+                        const productName = getProductName(item, language)
 
                         return (
                           <tr

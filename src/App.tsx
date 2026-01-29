@@ -8,6 +8,7 @@ import { LanguageSwitcher } from './components/LanguageSwitcher'
 import { generatePDF } from './components/PDFGenerator'
 import { useLanguage } from './app/i18n/LanguageProvider'
 import { getCategoryName, getDateLocale } from './app/i18n/translations'
+import { getProductName } from './app/domain/product-names'
 import { useRestockingList, encodeListForSharing, decodeListFromShare } from './components/useRestockingList'
 import { classifyProduct } from './app/domain/classification'
 import { RESTAURANT_CONFIG } from './config/restaurant'
@@ -180,10 +181,13 @@ function App() {
     
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(item => 
-        item.productNameEs.toLowerCase().includes(query) ||
-        item.productNameFr.toLowerCase().includes(query)
-      )
+      filtered = filtered.filter(item => {
+        // Search in all available languages
+        const nameInCurrentLang = getProductName(item, language).toLowerCase()
+        const nameEs = item.productNameEs.toLowerCase()
+        const nameFr = item.productNameFr.toLowerCase()
+        return nameInCurrentLang.includes(query) || nameEs.includes(query) || nameFr.includes(query)
+      })
     }
     
     return filtered
@@ -723,7 +727,7 @@ function App() {
                 if (enableQuantityMode) {
                   const itemsWithoutUnit = items.filter(item => !item.unit)
                   if (itemsWithoutUnit.length > 0) {
-                    const productNames = itemsWithoutUnit.map(item => item.productNameEs)
+                    const productNames = itemsWithoutUnit.map(item => getProductName(item, language))
                     setUnitsValidationError(productNames)
                     setShowUnitValidationModal(true)
                     return
@@ -927,8 +931,10 @@ function CategorySection({ categoryId, items, onRemoveItem, onUpdateUnit, onUpda
               }`}
             >
             <div className="flex flex-col flex-grow">
-              <span className="font-medium text-gray-900 dark:text-white text-sm">{item.productNameEs}</span>
-              <span className="text-gray-400 dark:text-gray-500 italic text-xs font-serif mt-0.5">{item.productNameFr}</span>
+              <span className="font-medium text-gray-900 dark:text-white text-sm">{getProductName(item, language)}</span>
+              <span className="text-gray-400 dark:text-gray-500 italic text-xs font-serif mt-0.5">
+                {language === 'fr' ? item.productNameFr : item.productNameEs}
+              </span>
             </div>
 
             <div className="flex items-center gap-2 ml-4">

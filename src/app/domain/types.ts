@@ -21,20 +21,22 @@ export type ProductId = string & { readonly brand: 'ProductId' }
  */
 export interface Category {
   id: CategoryId
-  nameEs: string      // "Carnes"
-  nameFr: string      // "Viandes"
+  nameEs: string      // "Carnes" (deprecated - for backward compatibility)
+  nameFr: string      // "Viandes" (deprecated - for backward compatibility)
   description?: string
 }
 
 /**
  * Producto en el diccionario
  * Representa un artículo conocido del sistema
+ * nameKey: clave semántica en inglés para traducciones controladas
  */
 export interface Product {
   id: ProductId
   categoryId: CategoryId
-  nameEs: string      // "Pecho de pollo"
-  nameFr: string      // "Poitrine de poulet"
+  nameKey: string     // "chicken_breast" - semantic key for translations
+  nameEs: string      // "Pecho de pollo" (deprecated - for backward compatibility)
+  nameFr: string      // "Poitrine de poulet" (deprecated - for backward compatibility)
   unit: Unit
 }
 
@@ -51,6 +53,7 @@ export type Unit = 'kg' | 'g' | 'L' | 'ml' | 'unidad' | 'caja' | 'paquete' | 'bo
 export interface ListItem {
   id: string                    // UUID o identificador único
   productId: ProductId          // Referencia al producto (si existe)
+  productNameKey?: string       // Clave semántica para traducciones controladas (Fase 1.3)
   productNameEs: string         // Nombre como lo ingresó el chef
   categoryId: CategoryId        // Categoría asignada (puede ser "otros")
   categoryNameEs: string        // Nombre de categoría en español

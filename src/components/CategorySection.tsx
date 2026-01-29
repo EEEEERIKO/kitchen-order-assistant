@@ -1,4 +1,6 @@
 import type { ListItem, CategoryId } from '../app/domain/types'
+import { useLanguage } from '../app/i18n/LanguageProvider'
+import { getProductName } from '../app/domain/product-names'
 
 interface CategorySectionProps {
   categoryNameEs: string
@@ -12,7 +14,6 @@ interface CategorySectionProps {
   categoryId?: CategoryId
   newProductId?: string | null
 }
-
 const getCategoryDotColor = (categoryId?: CategoryId): string => {
   const colorMap: Record<string, string> = {
     'carnes': 'bg-primary',
@@ -34,6 +35,7 @@ export function CategorySection({
   categoryId,
   newProductId,
 }: CategorySectionProps) {
+  const { language } = useLanguage()
   const dotColor = getCategoryDotColor(categoryId)
 
   return (
@@ -58,8 +60,10 @@ export function CategorySection({
             }`}
           >
             <div className="flex flex-col flex-grow">
-              <span className="font-medium text-gray-900 dark:text-white text-sm">{item.productNameEs}</span>
-              <span className="text-gray-400 dark:text-gray-500 italic text-xs font-serif mt-0.5">{item.productNameFr}</span>
+              <span className="font-medium text-gray-900 dark:text-white text-sm">{getProductName(item, language)}</span>
+              <span className="text-gray-400 dark:text-gray-500 italic text-xs font-serif mt-0.5">
+                {language === 'fr' ? item.productNameFr : item.productNameEs}
+              </span>
             </div>
 
             <div className="flex items-center gap-2 ml-4">
@@ -78,8 +82,8 @@ export function CategorySection({
             <button
               onClick={() => onRemoveItem(item.id)}
               className="w-6 h-6 flex items-center justify-center text-gray-300 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded transition-all opacity-0 group-hover:opacity-100"
-              aria-label={`Eliminar ${item.productNameEs}`}
-              title={`Eliminar ${item.productNameEs}`}
+              aria-label={`Eliminar ${getProductName(item, language)}`}
+              title={`Eliminar ${getProductName(item, language)}`}
             >
               <span className="material-symbols-outlined" style={{fontSize: '18px'}}>close</span>
             </button>
